@@ -31,6 +31,7 @@ common shared-properties
 library
   import:              shared-properties
   exposed-modules:     Data.Merkle
+                     , Data.Merkle.Hash
   default-extensions:  NoImplicitPrelude
   -- other-modules:
   -- other-extensions:
@@ -40,6 +41,7 @@ test-suite test
   import:              shared-properties
   other-modules:       Test.Merkle
                      , Data.Merkle
+                     , Data.Merkle.Hash
   type:                exitcode-stdio-1.0
   main-is:             test.hs
   hs-source-dirs:
