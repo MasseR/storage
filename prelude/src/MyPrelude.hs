@@ -9,6 +9,7 @@ module MyPrelude
 
 import           Control.Monad.Trans  as X (MonadIO, liftIO)
 import           Data.Text            as X (Text)
+import           GHC.Generics         as X (Generic)
 import           Prelude              as X hiding (putStrLn, readFile,
                                             writeFile)
 

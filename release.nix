@@ -36,7 +36,10 @@ rec {
       stylish-haskell
       hlint
       binutils
-      (haskell.packages.ghc865.ghcWithHoogle (_: storage-server.buildInputs ++ storage-server.propagatedBuildInputs))
+      (haskell.packages.ghc865.ghcWithHoogle
+        (_: builtins.concatMap
+          (p: p.buildInputs ++ p.propagatedBuildInputs)
+          [ prelude merkle storage-core storage-server ]))
     ];
   };
 }
