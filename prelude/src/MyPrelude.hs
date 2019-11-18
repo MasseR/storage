@@ -12,6 +12,7 @@ import           Data.Text            as X (Text)
 import           GHC.Generics         as X (Generic)
 import           Prelude              as X hiding (putStrLn, readFile,
                                             writeFile)
+import           System.IO            as X (Handle)
 
 import qualified Data.ByteString      as B
 import qualified Data.ByteString.Lazy as LB

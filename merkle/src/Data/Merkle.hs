@@ -5,17 +5,21 @@
 {-# LANGUAGE KindSignatures       #-}
 {-# LANGUAGE LambdaCase           #-}
 {-# LANGUAGE OverloadedStrings    #-}
+{-# LANGUAGE TemplateHaskell      #-}
 {-# LANGUAGE TypeApplications     #-}
 {-# LANGUAGE TypeFamilies         #-}
 {-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE TemplateHaskell #-}
-module Data.Merkle where
+module Data.Merkle
+  ( module Data.Merkle
+  , Hash
+  , Hashable(..)
+  ) where
 
 import           MyPrelude
 
 import           Data.Merkle.Hash
 
-import Data.List.NonEmpty (NonEmpty(..), unfoldr, nonEmpty)
+import           Data.List.NonEmpty          (NonEmpty (..), nonEmpty, unfoldr)
 
 -- For testing
 import           Data.GenValidity
