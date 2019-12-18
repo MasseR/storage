@@ -2,13 +2,10 @@
 {-# LANGUAGE DeriveGeneric        #-}
 {-# LANGUAGE DeriveTraversable    #-}
 {-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE KindSignatures       #-}
 {-# LANGUAGE LambdaCase           #-}
 {-# LANGUAGE OverloadedStrings    #-}
-{-# LANGUAGE TemplateHaskell      #-}
 {-# LANGUAGE TypeApplications     #-}
 {-# LANGUAGE TypeFamilies         #-}
-{-# LANGUAGE TypeSynonymInstances #-}
 module Data.Merkle
   ( module Data.Merkle
   , Hash

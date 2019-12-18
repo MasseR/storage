@@ -5,5 +5,5 @@ import Test.Hspec
 import qualified Test.Merkle
 
 main :: IO ()
-main = hspec $
+main = hspec
   Test.Merkle.spec

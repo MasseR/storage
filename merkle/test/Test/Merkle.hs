@@ -1,4 +1,3 @@
-{-# Language TypeApplications #-}
 module Test.Merkle where
 
 import           Test.Hspec
@@ -8,7 +7,7 @@ import Data.Merkle
 import           Test.Validity
 
 spec :: Spec
-spec = do
+spec =
   describe "Merging trees" $ do
     it "Merging two valid trees creates a valid tree" $
       producesValidsOnValids2 merge
