@@ -21,7 +21,7 @@ library
   exposed-modules:     Storage
                      , Storage.API
   build-depends:       base >=4.12 && <4.13
-                     , prelude
+                     , masse-prelude
                      , merkle
                      , servant
                      , lens
