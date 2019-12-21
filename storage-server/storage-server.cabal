@@ -18,12 +18,34 @@ build-type:          Simple
 extra-source-files:  CHANGELOG.md
 
 executable storage-server
+  ghc-options: -Wall
   main-is:             Main.hs
-  -- other-modules:
+  default-extensions:  NoImplicitPrelude
+                     , OverloadedStrings
+                     , DerivingStrategies
+                     , StandaloneDeriving
+                     , DerivingVia
+                     , DeriveGeneric
+  other-modules:       Server
+                     , API
+                     , Control.Monad.App
+                     , Storage.Logger
+                     , Storage.Environment
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13
                      , masse-prelude
                      , storage-core
                      , merkle
-  -- hs-source-dirs:
+                     , servant
+                     , servant-server
+                     , warp
+                     , wai
+                     , masse-prelude
+                     , servant-swagger
+                     , servant-swagger-ui
+                     , katip
+                     , lens
+                     , generic-lens
+                     , mtl
+  hs-source-dirs:      src
   default-language:    Haskell2010
