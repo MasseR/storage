@@ -1,7 +1,8 @@
-{-# Language GeneralizedNewtypeDeriving #-}
-{-# Language ConstraintKinds #-}
-{-# Language FlexibleInstances #-}
-{-# Language MultiParamTypeClasses #-}
+{-# LANGUAGE ConstraintKinds            #-}
+{-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
 module Storage.Logger
   (
   -- * Log initialization and setup
@@ -18,16 +19,16 @@ module Storage.Logger
   )
   where
 
-import Katip
-import Control.Lens (lens, Lens', view, over)
-import MyPrelude
-import Control.Monad.Reader (local)
-import GHC.Stack
+import           Control.Lens         (Lens', lens, over, view)
+import           Control.Monad.Reader (local)
+import           GHC.Stack
+import           Katip
+import           MyPrelude
 
 data LoggingEnv
   = LoggingEnv { logNamespace :: Namespace
-               , logContexts :: LogContexts
-               , logEnv :: LogEnv
+               , logContexts  :: LogContexts
+               , logEnv       :: LogEnv
                }
 
 class HasLoggingEnv a where
