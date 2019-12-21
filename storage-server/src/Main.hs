@@ -10,9 +10,12 @@ import           Storage.Logger      (logInfo, withLogger)
 
 import           Data.Config
 
+import           System.Environment  (getArgs)
+
 main :: IO ()
 main = withLogger $ \l -> do
-  conf <- readConfig Nothing
+  path <- listToMaybe <$> getArgs
+  conf <- readConfig path
   let environment = Env { loggingEnv = l
                         , config = conf
                         }
