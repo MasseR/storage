@@ -64,11 +64,11 @@ merge :: Merkle Hash -> Merkle Hash -> Merkle Hash
 merge l r = Node (hash (l,r)) (l :| [r])
 
 mergeLayer :: NonEmpty ( Merkle Hash ) -> NonEmpty ( Merkle Hash )
-mergeLayer = fmap (uncurry merge) . unfoldr chunks
+mergeLayer = fmap (either id (uncurry merge)) . unfoldr chunks
   where
     chunks = \case
-      a :| (b : xs) -> ( (a, b), nonEmpty xs)
-      a :| [] -> ( (a, Leaf (hash @ByteString "")), Nothing)
+      a :| (b : xs) -> ( Right (a, b), nonEmpty xs)
+      a :| [] -> ( Left a, Nothing)
 
 combine :: NonEmpty ( Merkle Hash ) -> Merkle Hash
 combine = \case
