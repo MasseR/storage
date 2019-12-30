@@ -37,6 +37,7 @@ executable storage-server
                      , Data.Config
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13
+                     , aeson
                      , generic-lens
                      , katip
                      , lens
@@ -44,7 +45,10 @@ executable storage-server
                      , masse-prelude
                      , merkle
                      , mtl
+                     , pipes
+                     , pipes-bytestring
                      , servant
+                     , servant-pipes
                      , servant-server
                      , servant-swagger
                      , servant-swagger-ui
@@ -52,7 +56,6 @@ executable storage-server
                      , transformers
                      , wai
                      , warp
-                     , aeson
                      , yaml
   hs-source-dirs:      src
   default-language:    Haskell2010

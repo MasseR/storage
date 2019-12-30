@@ -16,6 +16,7 @@ import           MyPrelude
 
 import qualified Storage.API.Resource   as Resource
 
+
 data API route
   = API { index    :: route :- Get '[JSON] Text
         , resource :: route :- "resource" :> ToServant Resource.API AsApi
