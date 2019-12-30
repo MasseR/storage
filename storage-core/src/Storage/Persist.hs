@@ -43,12 +43,19 @@ treeStore = iso toTree fromTree
     toTree = TreeStore . (</> "trees") . persistRoot
     fromTree = PersistStore . takeDirectory . treeRoot
 
+-- | Create a file with a prefix
+hashPath :: Hash -> FilePath
+hashPath h = prefix </> suffix
+  where
+    full = view unpackedChars $ base16 h
+    (prefix,suffix) = splitAt 3 full
+
 writeObject :: (MonadIO m, MonadReader r m, HasPersistStore r) => Hash -> ByteString -> m ()
 writeObject h content = do
   ObjectStore path <- view (persistStore . objectStore)
-  createDirectoryIfMissing True path
-  let file = view unpackedChars $ base16 h
-  writeFile (path </> file) content
+  let file = path </> hashPath h
+  createDirectoryIfMissing True (takeDirectory file)
+  writeFile file content
 
 writeTree :: (MonadIO m, MonadReader r m, HasPersistStore r) => Merkle Hash -> m ()
 writeTree m = do
@@ -56,5 +63,5 @@ writeTree m = do
   sequence_ $ extend (go path) m
   where
     go path tree = do
-      let file = view unpackedChars . base16 . extract $ tree
+      let file = hashPath . extract $ tree
       liftIO $ Binary.encodeFile (path </> file) tree
