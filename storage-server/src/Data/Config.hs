@@ -2,12 +2,15 @@ module Data.Config where
 
 import           Data.Port        (Port)
 import           MyPrelude
+import           Storage.Persist  (PersistStore)
 
 import           Data.Aeson       (FromJSON, ToJSON)
 import           Data.Yaml.Config
 
-newtype Config
-  = Config { port :: Port }
+data Config
+  = Config { port         :: Port
+           , persistStore :: PersistStore
+           }
 
 deriving stock instance Generic Config
 deriving instance ToJSON Config

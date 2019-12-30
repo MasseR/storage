@@ -31,6 +31,8 @@ library
                      , pipes-bytestring
                      , pipes-group
                      , binary
+                     , aeson
+                     , unliftio
   default-extensions:  NoImplicitPrelude
   ghc-options:         -Wall
   hs-source-dirs:      src

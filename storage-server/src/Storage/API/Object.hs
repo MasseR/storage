@@ -1,7 +1,8 @@
-{-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE DataKinds       #-}
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeOperators   #-}
+{-# LANGUAGE ConstraintKinds     #-}
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE RecordWildCards     #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeOperators       #-}
 module Storage.API.Object
   ( API
   , handler
@@ -20,6 +21,7 @@ import           UnliftIO.Exception     (throwIO)
 import           MyPrelude
 
 import           Storage                (build)
+import           Storage.Persist        (HasPersistStore)
 
 import           Pipes
 -- import qualified Pipes.Prelude          as P
@@ -35,6 +37,7 @@ type Reqs r m =
   , MonadIO m
   , MonadUnliftIO m
   , WithLogging m
+  , HasPersistStore r
   )
 
 newtype API route
@@ -42,10 +45,11 @@ newtype API route
   deriving stock (Generic)
 
 
-handler :: Reqs r m => API (AsServerT m)
+handler :: forall r m. Reqs r m => API (AsServerT m)
 handler = API {..}
   where
+    post :: Producer ByteString IO () -> m Hash
     post bs = do
-      tree <- liftIO $ build bs
+      tree <- build (hoist liftIO bs)
       logInfo $ tshow $ fmap length tree
       maybe (throwIO err500) (pure . extract) tree

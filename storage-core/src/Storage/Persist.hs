@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Storage.Persist
   ( PersistStore(..)
   , HasPersistStore(..)
@@ -7,7 +8,7 @@ module Storage.Persist
   )
   where
 
-import           Control.Comonad             (extract, extend)
+import           Control.Comonad             (extend, extract)
 import           Control.Lens                (Iso', Lens', iso, lens, view)
 import qualified Data.Binary                 as Binary
 import           Data.ByteString.Strict.Lens (unpackedChars)
@@ -15,8 +16,11 @@ import           Data.Merkle                 (Merkle)
 import           Data.Merkle.Hash            (Hash, base16)
 import           MyPrelude
 import           System.FilePath.Posix
+import           UnliftIO.Directory
 
-newtype PersistStore = PersistStore { persistRoot :: FilePath }
+import           Data.Aeson
+
+newtype PersistStore = PersistStore { persistRoot :: FilePath } deriving (Show, ToJSON, FromJSON)
 newtype ObjectStore = ObjectStore { objectRoot :: FilePath }
 newtype TreeStore = TreeStore { treeRoot :: FilePath }
 
@@ -42,6 +46,7 @@ treeStore = iso toTree fromTree
 writeObject :: (MonadIO m, MonadReader r m, HasPersistStore r) => Hash -> ByteString -> m ()
 writeObject h content = do
   ObjectStore path <- view (persistStore . objectStore)
+  createDirectoryIfMissing True path
   let file = view unpackedChars $ base16 h
   writeFile (path </> file) content
 
