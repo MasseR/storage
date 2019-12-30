@@ -10,11 +10,13 @@ import           Pipes
 import qualified Pipes.ByteString   as PB
 import qualified Pipes.Prelude      as P
 
-build :: MonadIO m => Handle -> m (Maybe (Merkle Hash))
-build h = fmap combine . NE.nonEmpty <$> runEffect (P.toListM hashes)
+build :: Monad m => Producer ByteString m () -> m (Maybe (Merkle Hash))
+build p = fmap combine . NE.nonEmpty <$> P.toListM hashes
   where
     hashes =
-      PB.hGetSome 4096 h
+      PB.chunksOf' chunk p
         >-> P.map (\x -> (x, hash x))
-        >-> P.mapM pure -- Write the chunks to persisten storage
+        >-> P.mapM pure -- XXX: Write the chunks to disk
         >-> P.map (Leaf . snd)
+    chunk :: Int
+    chunk = 4096

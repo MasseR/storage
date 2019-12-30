@@ -8,12 +8,19 @@ import           MyPrelude
 import           Crypto.Hash                 (Digest, SHA256)
 import qualified Crypto.Hash                 as H
 import           Data.ByteArray              (convert)
+import qualified Data.ByteString.Base16      as B16
 
-import Data.List.NonEmpty (NonEmpty)
+import           Control.Lens                (view)
+import           Data.Text.Strict.Lens       (utf8)
+
+import           Data.List.NonEmpty          (NonEmpty)
+
+import           Data.Aeson                  (ToJSON (..))
 
 -- For testing
 import           Data.GenValidity
 import           Data.GenValidity.ByteString ()
+
 
 class Hashable a where
   hash :: a -> Hash
@@ -38,6 +45,9 @@ instance Hashable a => Hashable (NonEmpty a) where
 
 newtype Hash = Hash { getHash :: Digest SHA256 }
   deriving (Show, Eq, Generic)
+
+instance ToJSON Hash where
+  toJSON = toJSON . view utf8 . B16.encode . convert . getHash
 
 instance Validity Hash where
   validate = trivialValidation

@@ -19,15 +19,17 @@ extra-source-files:  CHANGELOG.md
 common shared-properties
   default-language:    Haskell2010
   build-depends:       base >=4.12 && <4.13
-                     , masse-prelude
-                     , cryptonite
-                     , memory
-                     , lens
-                     , genvalidity
-                     , genvalidity-text
-                     , genvalidity-bytestring
-                     , recursion-schemes
+                     , aeson
                      , comonad
+                     , cryptonite
+                     , genvalidity
+                     , genvalidity-bytestring
+                     , genvalidity-text
+                     , lens
+                     , masse-prelude
+                     , memory
+                     , recursion-schemes
+                     , base16-bytestring
 
 library
   import:              shared-properties
