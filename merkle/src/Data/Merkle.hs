@@ -20,6 +20,8 @@ import           Data.List.NonEmpty          (NonEmpty (..), nonEmpty, unfoldr)
 
 import           Control.Comonad
 
+import Data.Binary (Binary)
+
 -- For testing
 import           Data.GenValidity
 import           Data.GenValidity.ByteString ()
@@ -28,6 +30,8 @@ data Merkle a
   = Node a (NonEmpty (Merkle a))
   | Leaf a
   deriving (Show, Eq, Functor, Foldable, Traversable, Generic)
+
+instance Binary a => Binary (Merkle a)
 
 instance Comonad Merkle where
   extract = \case

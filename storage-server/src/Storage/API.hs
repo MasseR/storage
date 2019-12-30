@@ -14,11 +14,11 @@ import           Servant.Server.Generic
 
 import           MyPrelude
 
-import qualified Storage.API.Object   as Object
+import qualified Storage.API.Object     as Object
 
 
 data API route
-  = API { index    :: route :- Get '[JSON] Text
+  = API { index  :: route :- Get '[JSON] Text
         , object :: route :- "object" :> ToServant Object.API AsApi
         }
   deriving stock (Generic)

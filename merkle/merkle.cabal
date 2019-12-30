@@ -30,6 +30,7 @@ common shared-properties
                      , memory
                      , recursion-schemes
                      , base16-bytestring
+                     , binary
 
 library
   import:              shared-properties

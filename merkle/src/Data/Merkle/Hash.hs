@@ -9,6 +9,7 @@ import           Crypto.Hash                 (Digest, SHA256)
 import qualified Crypto.Hash                 as H
 import           Data.ByteArray              (convert)
 import qualified Data.ByteString.Base16      as B16
+import Data.Binary (Binary(..), Get)
 
 import           Control.Lens                (view)
 import           Data.Text.Strict.Lens       (utf8)
@@ -46,8 +47,15 @@ instance Hashable a => Hashable (NonEmpty a) where
 newtype Hash = Hash { getHash :: Digest SHA256 }
   deriving (Show, Eq, Generic)
 
+instance Binary Hash where
+  put = put . convert @_ @ByteString . getHash
+  get = maybe (fail "Not a digest") (pure . Hash) . H.digestFromByteString @_ @ByteString =<< get
+
+base16 :: Hash -> ByteString
+base16 = B16.encode . convert . getHash
+
 instance ToJSON Hash where
-  toJSON = toJSON . view utf8 . B16.encode . convert . getHash
+  toJSON = toJSON . view utf8 . base16
 
 instance Validity Hash where
   validate = trivialValidation
