@@ -27,6 +27,7 @@ common shared-properties
                      , genvalidity-text
                      , genvalidity-bytestring
                      , recursion-schemes
+                     , comonad
 
 library
   import:              shared-properties

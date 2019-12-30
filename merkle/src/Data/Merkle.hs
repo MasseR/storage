@@ -1,11 +1,11 @@
-{-# LANGUAGE DeriveFunctor        #-}
-{-# LANGUAGE DeriveGeneric        #-}
-{-# LANGUAGE DeriveTraversable    #-}
-{-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE LambdaCase           #-}
-{-# LANGUAGE OverloadedStrings    #-}
-{-# LANGUAGE TypeApplications     #-}
-{-# LANGUAGE TypeFamilies         #-}
+{-# LANGUAGE DeriveFunctor     #-}
+{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE DeriveTraversable #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications  #-}
+{-# LANGUAGE TypeFamilies      #-}
 module Data.Merkle
   ( module Data.Merkle
   , Hash
@@ -18,6 +18,8 @@ import           Data.Merkle.Hash
 
 import           Data.List.NonEmpty          (NonEmpty (..), nonEmpty, unfoldr)
 
+import           Control.Comonad
+
 -- For testing
 import           Data.GenValidity
 import           Data.GenValidity.ByteString ()
@@ -26,6 +28,14 @@ data Merkle a
   = Node a (NonEmpty (Merkle a))
   | Leaf a
   deriving (Show, Eq, Functor, Foldable, Traversable, Generic)
+
+instance Comonad Merkle where
+  extract = \case
+    Node a _ -> a
+    Leaf a -> a
+  extend f = \case
+    Leaf a -> Leaf (f $ Leaf a)
+    Node a cs -> Node (f (Node a cs)) (fmap (extend f) cs)
 
 merkleValue :: Merkle a -> a
 merkleValue = \case
