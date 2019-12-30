@@ -51,7 +51,6 @@ handler = API {..}
     post :: Producer ByteString IO () -> m Hash
     post bs = do
       tree <- build (hoist liftIO bs)
-      logInfo $ tshow $ fmap length tree
       maybe (throwIO err500) (pure . extract) tree
     get :: Hash -> m (Producer ByteString IO ())
     get h = do

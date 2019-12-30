@@ -18,7 +18,7 @@ build-type:          Simple
 extra-source-files:  CHANGELOG.md
 
 executable storage-server
-  ghc-options: -Wall
+  ghc-options: -Wall -rtsopts -threaded
   main-is:             Main.hs
   default-extensions:  NoImplicitPrelude
                      , OverloadedStrings
