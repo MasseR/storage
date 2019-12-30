@@ -7,7 +7,7 @@ module Storage.Persist
   )
   where
 
-import           Control.Comonad             (extract)
+import           Control.Comonad             (extract, extend)
 import           Control.Lens                (Iso', Lens', iso, lens, view)
 import qualified Data.Binary                 as Binary
 import           Data.ByteString.Strict.Lens (unpackedChars)
@@ -48,5 +48,8 @@ writeObject h content = do
 writeTree :: (MonadIO m, MonadReader r m, HasPersistStore r) => Merkle Hash -> m ()
 writeTree m = do
   TreeStore path <- view (persistStore . treeStore)
-  let file = view unpackedChars . base16 . extract $ m
-  liftIO $ Binary.encodeFile (path </> file) m
+  sequence_ $ extend (go path) m
+  where
+    go path tree = do
+      let file = view unpackedChars . base16 . extract $ tree
+      liftIO $ Binary.encodeFile (path </> file) tree
