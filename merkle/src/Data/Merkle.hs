@@ -20,7 +20,7 @@ import           Data.List.NonEmpty          (NonEmpty (..), nonEmpty, unfoldr)
 
 import           Control.Comonad
 
-import Data.Binary (Binary)
+import           Data.Binary                 (Binary)
 
 -- For testing
 import           Data.GenValidity
@@ -74,3 +74,12 @@ combine :: NonEmpty ( Merkle Hash ) -> Merkle Hash
 combine = \case
   x :| [] -> x
   xs -> combine (mergeLayer xs)
+
+leaves :: Merkle a -> NonEmpty a
+leaves = unfoldr go . pure
+  where
+    go = \case
+      Leaf a :| [] -> (a, Nothing)
+      Leaf a :| (x:xs) -> (a, Just (x :| xs))
+      Node _ cs :| [] -> go cs
+      Node _ cs :| (x:xs) -> go (cs <> (x :| xs))

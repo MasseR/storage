@@ -4,7 +4,7 @@ import           MyPrelude
 
 import           Data.Merkle
 
-import Storage.Persist
+import           Storage.Persist
 
 import qualified Data.List.NonEmpty as NE
 
@@ -27,3 +27,13 @@ build p = do
         >-> P.mapM (\(x, h) -> Leaf h <$ writeObject h x)
     chunk :: Int
     chunk = 4096
+
+consume
+  :: (MonadUnliftIO m, Monad m, MonadReader r m, HasPersistStore r)
+  => Hash
+  -> m (Maybe (Producer ByteString m ()))
+consume h = do
+  tree <- readTree h
+  traverse (pure . consume' . leaves) tree
+  where
+    consume' xs = each xs >-> P.mapM readObject

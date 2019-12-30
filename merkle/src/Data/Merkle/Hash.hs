@@ -1,8 +1,8 @@
-{-# LANGUAGE DeriveGeneric        #-}
-{-# LANGUAGE TypeApplications     #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE TypeApplications           #-}
+{-# LANGUAGE TypeSynonymInstances       #-}
 module Data.Merkle.Hash where
 
 import           MyPrelude
@@ -13,14 +13,14 @@ import           Data.Binary                 (Binary (..))
 import           Data.ByteArray              (convert)
 import qualified Data.ByteString.Base16      as B16
 
-import           Control.Lens                (view, Prism', prism', re, preview)
+import           Control.Lens                (Prism', preview, prism', re, view)
 import           Data.Text.Strict.Lens       (utf8)
 
 import           Data.List.NonEmpty          (NonEmpty)
 
-import           Data.Aeson                  (ToJSON (..), FromJSON (..))
+import           Data.Aeson                  (FromJSON (..), ToJSON (..))
 
-import Web.HttpApiData (FromHttpApiData(..))
+import           Web.HttpApiData             (FromHttpApiData (..))
 
 -- For testing
 import           Data.GenValidity
@@ -35,7 +35,7 @@ hashed :: Prism' B16 Hash
 hashed = prism' toB16 fromB16
   where
     toB16 = B16 . view utf8 . B16.encode . convert . getHash
-    fromB16 = fmap Hash . H.digestFromByteString @_ @ByteString . view (re utf8) . get16
+    fromB16 = fmap Hash . H.digestFromByteString . fst . B16.decode . view (re utf8) . get16
 
 _Text :: Prism' Text B16
 _Text = prism' get16 (Just . B16) -- Should this have some verification steps?

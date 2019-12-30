@@ -5,18 +5,22 @@ module Storage.Persist
   , persistStore
   , writeObject
   , writeTree
+  , readTree
+  , readObject
   )
   where
 
-import           Control.Comonad             (extend, extract)
-import           Control.Lens                (Iso', Lens', iso, lens, view, re)
-import qualified Data.Binary                 as Binary
+import           Control.Comonad       (extend, extract)
+import           Control.Lens          (Iso', Lens', iso, lens, re, view)
+import qualified Data.Binary           as Binary
+import           Data.Merkle           (Merkle)
+import           Data.Merkle.Hash      (Hash, hashed, _Text)
 import           Data.Text.Strict.Lens (unpacked)
-import           Data.Merkle                 (Merkle)
-import           Data.Merkle.Hash            (Hash, hashed, _Text)
 import           MyPrelude
 import           System.FilePath.Posix
 import           UnliftIO.Directory
+
+import           System.IO.Error       (isDoesNotExistError)
 
 import           Data.Aeson
 
@@ -59,6 +63,12 @@ writeObject h content = do
   createDirectoryIfMissing True (takeDirectory file)
   writeFile file content
 
+readObject :: (MonadIO m, MonadReader r m, HasPersistStore r) => Hash -> m ByteString
+readObject h = do
+  ObjectStore path <- view (persistStore . objectStore)
+  let file = path </> hashPath h
+  readFile file
+
 writeTree :: (MonadIO m, MonadReader r m, HasPersistStore r) => Merkle Hash -> m ()
 writeTree m = do
   TreeStore path <- view (persistStore . treeStore)
@@ -68,3 +78,14 @@ writeTree m = do
       let file = path </> (hashPath . extract $ tree)
       createDirectoryIfMissing True (takeDirectory file)
       liftIO $ Binary.encodeFile file tree
+
+readTree
+  :: (MonadUnliftIO m, MonadIO m, MonadReader r m, HasPersistStore r)
+  => Hash
+  -> m (Maybe (Merkle Hash))
+readTree h = do
+  TreeStore path <- view (persistStore . treeStore)
+  let file = path </> hashPath h
+  catch
+    (Just <$> liftIO (Binary.decodeFile file))
+    (\e -> if isDoesNotExistError e then pure Nothing else throwIO e)

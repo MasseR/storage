@@ -20,7 +20,7 @@ import           UnliftIO.Exception     (throwIO)
 
 import           MyPrelude
 
-import           Storage                (build)
+import           Storage                (build, consume)
 import           Storage.Persist        (HasPersistStore)
 
 import           Pipes
@@ -54,4 +54,6 @@ handler = API {..}
       logInfo $ tshow $ fmap length tree
       maybe (throwIO err500) (pure . extract) tree
     get :: Hash -> m (Producer ByteString IO ())
-    get _hash = throwIO err404
+    get h = do
+      x <- consume h
+      maybe (throwIO err404) (\p -> withRunInIO $ \r -> pure (hoist r p)) x
