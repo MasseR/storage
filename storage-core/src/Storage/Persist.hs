@@ -9,11 +9,11 @@ module Storage.Persist
   where
 
 import           Control.Comonad             (extend, extract)
-import           Control.Lens                (Iso', Lens', iso, lens, view)
+import           Control.Lens                (Iso', Lens', iso, lens, view, re)
 import qualified Data.Binary                 as Binary
-import           Data.ByteString.Strict.Lens (unpackedChars)
+import           Data.Text.Strict.Lens (unpacked)
 import           Data.Merkle                 (Merkle)
-import           Data.Merkle.Hash            (Hash, base16)
+import           Data.Merkle.Hash            (Hash, hashed, _Text)
 import           MyPrelude
 import           System.FilePath.Posix
 import           UnliftIO.Directory
@@ -47,7 +47,9 @@ treeStore = iso toTree fromTree
 hashPath :: Hash -> FilePath
 hashPath h = prefix </> suffix
   where
-    full = view unpackedChars $ base16 h
+    base16 :: Hash -> String
+    base16 = view (re hashed . re _Text . unpacked)
+    full = base16 h
     (prefix,suffix) = splitAt 3 full
 
 writeObject :: (MonadIO m, MonadReader r m, HasPersistStore r) => Hash -> ByteString -> m ()

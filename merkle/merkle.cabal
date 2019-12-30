@@ -31,9 +31,11 @@ common shared-properties
                      , recursion-schemes
                      , base16-bytestring
                      , binary
+                     , http-api-data
 
 library
   import:              shared-properties
+  ghc-options: -Wall -Werror
   exposed-modules:     Data.Merkle
                      , Data.Merkle.Hash
   default-extensions:  NoImplicitPrelude

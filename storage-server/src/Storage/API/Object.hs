@@ -15,7 +15,7 @@ import           Servant.API.Generic
 import           Servant.Pipes          ()
 import           Servant.Server.Generic
 
-import           Servant.Server         (err500)
+import           Servant.Server         (err404, err500)
 import           UnliftIO.Exception     (throwIO)
 
 import           MyPrelude
@@ -24,7 +24,6 @@ import           Storage                (build)
 import           Storage.Persist        (HasPersistStore)
 
 import           Pipes
--- import qualified Pipes.Prelude          as P
 
 import           Storage.Logger
 
@@ -40,8 +39,9 @@ type Reqs r m =
   , HasPersistStore r
   )
 
-newtype API route
-  = API { post :: route :- StreamBody NoFraming OctetStream (Producer ByteString IO ()) :> Post '[JSON] Hash }
+data API route
+  = API { post :: route :- StreamBody NoFraming OctetStream (Producer ByteString IO ()) :> Post '[JSON] Hash
+        , get :: route :- Capture "hash" Hash :> StreamGet NoFraming OctetStream (Producer ByteString IO ()) }
   deriving stock (Generic)
 
 
@@ -53,3 +53,5 @@ handler = API {..}
       tree <- build (hoist liftIO bs)
       logInfo $ tshow $ fmap length tree
       maybe (throwIO err500) (pure . extract) tree
+    get :: Hash -> m (Producer ByteString IO ())
+    get _hash = throwIO err404
