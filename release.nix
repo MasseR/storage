@@ -5,8 +5,8 @@ let
   masse-prelude-src = pkgs.fetchFromGitHub {
     owner = "MasseR";
     repo = "masse-prelude";
-    rev = "a529b7c7e26d2d30ad5442c9124c88c76d2188f8";
-    sha256 = "0m15yasfgm4j2450d2wcgyjj6y75p1sbbx8dgsi3vkll8ari306p";
+    rev = "52fdf7cd5b70e399d6279083757b1ea0806aa68a";
+    sha256 = "0pzp97899r2wxsbz5s8mn6h1hyjbq786aq83i4dcmgqv68g8v0ql";
   };
   overrides = pkgs: with pkgs.haskell.lib; {
     haskell = pkgs.haskell // {

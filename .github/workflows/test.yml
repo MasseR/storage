@@ -9,4 +9,4 @@ jobs:
     - uses: actions/checkout@v1
     - uses: cachix/install-nix-action@v6
     - run: nix run nixpkgs.hlint -c hlint .
-    - run: nix-build release.nix
+    - run: nix build -f release.nix
