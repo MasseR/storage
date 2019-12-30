@@ -16,7 +16,10 @@ build
   :: (MonadIO m, Monad m, MonadReader r m, HasPersistStore r)
   => Producer ByteString m ()
   -> m (Maybe (Merkle Hash))
-build p = fmap combine . NE.nonEmpty <$> P.toListM hashes
+build p = do
+  tree <- fmap combine . NE.nonEmpty <$> P.toListM hashes
+  for_ tree writeTree
+  pure tree
   where
     hashes =
       PB.chunksOf' chunk p

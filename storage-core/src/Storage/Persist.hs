@@ -63,5 +63,6 @@ writeTree m = do
   sequence_ $ extend (go path) m
   where
     go path tree = do
-      let file = hashPath . extract $ tree
-      liftIO $ Binary.encodeFile (path </> file) tree
+      let file = path </> (hashPath . extract $ tree)
+      createDirectoryIfMissing True (takeDirectory file)
+      liftIO $ Binary.encodeFile file tree
