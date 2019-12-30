@@ -29,6 +29,7 @@ executable storage-server
                      , DeriveGeneric
   other-modules:       Storage.Server
                      , Storage.API
+                     , Storage.API.Resource
                      , Control.Monad.App
                      , Storage.Logger
                      , Storage.Environment

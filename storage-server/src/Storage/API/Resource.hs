@@ -1,10 +1,10 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds       #-}
 {-# LANGUAGE TypeOperators   #-}
-module Storage.API
+module Storage.API.Resource
   ( API
-  , Reqs
   , handler
+  , Reqs
   )
   where
 
@@ -14,22 +14,16 @@ import           Servant.Server.Generic
 
 import           MyPrelude
 
-import qualified Storage.API.Resource   as Resource
-
-data API route
-  = API { index    :: route :- Get '[JSON] Text
-        , resource :: route :- "resource" :> ToServant Resource.API AsApi
-        }
-  deriving stock (Generic)
-
 type Reqs r m =
   ( MonadReader r m
   , MonadIO m
-  , Resource.Reqs r m
   )
+
+newtype API route
+  = API { post :: route :- Post '[JSON] Text }
+  deriving stock (Generic)
+
 
 handler :: Reqs r m => API (AsServerT m)
 handler =
-  API { index = pure "hello"
-      , resource = toServant Resource.handler
-      }
+  API { post = pure "foo" }
