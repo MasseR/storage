@@ -14,23 +14,23 @@ import           Servant.Server.Generic
 
 import           MyPrelude
 
-import qualified Storage.API.Resource   as Resource
+import qualified Storage.API.Object   as Object
 
 
 data API route
   = API { index    :: route :- Get '[JSON] Text
-        , resource :: route :- "resource" :> ToServant Resource.API AsApi
+        , object :: route :- "object" :> ToServant Object.API AsApi
         }
   deriving stock (Generic)
 
 type Reqs r m =
   ( MonadReader r m
   , MonadIO m
-  , Resource.Reqs r m
+  , Object.Reqs r m
   )
 
 handler :: Reqs r m => API (AsServerT m)
 handler =
   API { index = pure "hello"
-      , resource = toServant Resource.handler
+      , object = toServant Object.handler
       }

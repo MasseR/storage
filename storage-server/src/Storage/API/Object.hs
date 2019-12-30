@@ -2,7 +2,7 @@
 {-# LANGUAGE DataKinds       #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeOperators   #-}
-module Storage.API.Resource
+module Storage.API.Object
   ( API
   , handler
   , Reqs
