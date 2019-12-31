@@ -21,17 +21,19 @@ library
   exposed-modules:     Storage
                      , Storage.Persist
   build-depends:       base >=4.12 && <4.13
+                     , aeson
+                     , binary
+                     , cereal
+                     , comonad
+                     , filepath
+                     , lens
                      , masse-prelude
                      , merkle
-                     , filepath
-                     , comonad
-                     , servant
-                     , lens
                      , pipes
                      , pipes-bytestring
                      , pipes-group
-                     , binary
-                     , aeson
+                     , safecopy
+                     , servant
                      , unliftio
   default-extensions:  NoImplicitPrelude
   ghc-options:         -Wall

@@ -4,6 +4,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell   #-}
 {-# LANGUAGE TypeFamilies      #-}
 module Data.Merkle
   ( module Data.Merkle
@@ -17,10 +18,11 @@ import           Data.Merkle.Hash
 
 import           Data.List.NonEmpty          (NonEmpty (..), nonEmpty, unfoldr)
 
+
 import           Control.Comonad
 
 import           Data.Binary                 (Binary)
-
+import           Data.SafeCopy               (base, deriveSafeCopy)
 -- For testing
 import           Data.GenValidity
 import           Data.GenValidity.ByteString ()
@@ -30,8 +32,16 @@ data Merkle a
   | Leaf a
   deriving (Show, Eq, Functor, Foldable, Traversable, Generic)
 
+-- * Instances
 instance Binary a => Binary (Merkle a)
+deriveSafeCopy 0 'base ''Merkle
 
+instance Hashable a => Hashable (Merkle a) where
+  hash = \case
+    Leaf a -> hash a
+    Node a _ -> hash a
+
+-- | Comonad instance
 instance Comonad Merkle where
   extract = \case
     Node a _ -> a
@@ -41,23 +51,21 @@ instance Comonad Merkle where
     Node a cs -> Node (f (Node a cs)) (fmap (extend f) cs)
 
 merkleValue :: Merkle a -> a
-merkleValue = \case
-  Node a _ -> a
-  Leaf a -> a
+merkleValue = extract
 
+-- * Testing instances
+
+-- | Validity instance
 instance Validity (Merkle Hash) where
   validate = \case
     Leaf _ -> mempty
     Node h cs -> check (h == hash cs) "Parent hash is left + right"
 
+-- | GenValid instance
 instance GenValid (Merkle Hash) where
   genValid = Leaf <$> genValid
   shrinkValid = shrinkValidStructurally
 
-instance Hashable a => Hashable (Merkle a) where
-  hash = \case
-    Leaf a -> hash a
-    Node a _ -> hash a
 
 merge :: Merkle Hash -> Merkle Hash -> Merkle Hash
 merge l r = Node (hash (l,r)) (l :| [r])
