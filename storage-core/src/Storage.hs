@@ -26,7 +26,7 @@ build p = do
         >-> P.map (\x -> (x, hash x))
         >-> P.mapM (\(x, h) -> Leaf h <$ writeObject h x)
     chunk :: Int
-    chunk = 4096
+    chunk = 2 ^ (19 :: Int) -- 512k
 
 consume
   :: (MonadUnliftIO m, Monad m, MonadReader r m, HasPersistStore r)

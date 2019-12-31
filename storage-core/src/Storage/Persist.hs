@@ -12,7 +12,6 @@ module Storage.Persist
 
 import           Control.Comonad       (extend, extract)
 import           Control.Lens          (Iso', Lens', iso, lens, re, view)
-import qualified Data.Binary           as Binary
 import           Data.Merkle           (Merkle)
 import           Data.Merkle.Hash      (Hash, hashed, _Text)
 import           Data.Text.Strict.Lens (unpacked)
@@ -22,7 +21,10 @@ import           UnliftIO.Directory
 
 import           System.IO.Error       (isDoesNotExistError)
 
-import           Data.Aeson
+import           Data.SafeCopy         (SafeCopy, safeGet, safePut)
+import           Data.Serialize        (runGet, runPut)
+
+import           Data.Aeson            (FromJSON, ToJSON)
 
 newtype PersistStore = PersistStore { persistRoot :: FilePath } deriving (Show, ToJSON, FromJSON)
 newtype ObjectStore = ObjectStore { objectRoot :: FilePath }
@@ -77,7 +79,13 @@ writeTree m = do
     go path tree = do
       let file = path </> (hashPath . extract $ tree)
       createDirectoryIfMissing True (takeDirectory file)
-      liftIO $ Binary.encodeFile file tree
+      encodeFile file tree
+
+encodeFile :: (MonadIO m, SafeCopy a) => FilePath -> a -> m ()
+encodeFile path = writeFile path . runPut . safePut
+
+decodeFile :: (MonadIO m, SafeCopy a) => FilePath -> m (Either String a)
+decodeFile path = runGet safeGet <$> readFile path
 
 readTree
   :: (MonadUnliftIO m, MonadIO m, MonadReader r m, HasPersistStore r)
@@ -87,5 +95,5 @@ readTree h = do
   TreeStore path <- view (persistStore . treeStore)
   let file = path </> hashPath h
   catch
-    (Just <$> liftIO (Binary.decodeFile file))
+    (either (const Nothing) Just <$> decodeFile file)
     (\e -> if isDoesNotExistError e then pure Nothing else throwIO e)
