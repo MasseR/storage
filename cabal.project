@@ -3,4 +3,5 @@ packages:
   storage-core/
   storage-server/
   storage-api/
+  storage-client/
   orphans/

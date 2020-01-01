@@ -22,7 +22,7 @@ import           Data.List.NonEmpty          (NonEmpty)
 
 import           Data.Aeson                  (FromJSON (..), ToJSON (..))
 
-import           Web.HttpApiData             (FromHttpApiData (..))
+import           Web.HttpApiData             (ToHttpApiData(..), FromHttpApiData (..))
 
 -- For testing
 import           Data.GenValidity
@@ -82,6 +82,9 @@ instance FromJSON Hash where
 
 instance FromHttpApiData Hash where
   parseUrlPiece = note "Not a digest" . preview hashed . B16
+
+instance ToHttpApiData Hash where
+  toUrlPiece = get16 . view (re hashed)
 
 instance Validity Hash where
   validate = trivialValidation
