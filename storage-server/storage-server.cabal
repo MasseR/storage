@@ -37,10 +37,12 @@ executable storage-server
                      , Storage.Server.System
                      , Storage.Server.System.Stats
                      , Storage.Metrics
+                     , Storage.Metrics.Carbon
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13
                      , aeson
                      , comonad
+                     , ekg-carbon
                      , ekg-core
                      , generic-lens
                      , katip

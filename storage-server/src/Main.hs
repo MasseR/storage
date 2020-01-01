@@ -4,15 +4,16 @@ module Main where
 import           MyPrelude
 
 import           Control.Monad.App
-import           Storage.Environment (Env (..))
-import           Storage.Server      (server)
+import           Storage.Environment    (Env (..))
+import           Storage.Server         (server)
 
-import           Storage.Logger      (logInfo, withLogger)
-import           Storage.Metrics     (newMetrics)
+import           Storage.Logger         (logInfo, withLogger)
+import           Storage.Metrics        (newMetrics)
+import           Storage.Metrics.Carbon (startCarbon)
 
 import           Data.Config
 
-import           System.Environment  (getArgs)
+import           System.Environment     (getArgs)
 
 
 main :: IO ()
@@ -23,4 +24,5 @@ main = withLogger $ \loggingEnv -> do
   let environment = Env { .. }
   runAppM environment $ do
     logInfo "Starting up the server .."
+    void startCarbon
     server

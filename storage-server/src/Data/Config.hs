@@ -1,15 +1,17 @@
 module Data.Config where
 
-import           Data.Port        (Port)
+import           Data.Port              (Port)
 import           MyPrelude
-import           Storage.Persist  (PersistStore)
+import           Storage.Metrics.Carbon (Carbon)
+import           Storage.Persist        (PersistStore)
 
-import           Data.Aeson       (FromJSON, ToJSON)
+import           Data.Aeson             (FromJSON, ToJSON)
 import           Data.Yaml.Config
 
 data Config
   = Config { port         :: Port
            , persistStore :: PersistStore
+           , carbon       :: Carbon
            }
 
 deriving stock instance Generic Config

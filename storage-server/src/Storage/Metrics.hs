@@ -2,6 +2,7 @@ module Storage.Metrics
   ( Metrics
   , HasMetrics(..)
   , metrics
+  , _Store
   , metricsMiddleware
   , newMetrics
   , sample
