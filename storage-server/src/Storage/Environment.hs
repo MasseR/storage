@@ -12,11 +12,13 @@ import           Storage.Logger        (HasLoggingEnv (..), LoggingEnv)
 import           Data.Config
 import           Data.Port
 
+import           Storage.Metrics       (HasMetrics (..), Metrics)
 import           Storage.Persist       (HasPersistStore (..))
 
 data Env
   = Env { loggingEnv :: LoggingEnv
         , config     :: Config
+        , metrics    :: Metrics
         }
   deriving Generic
 
@@ -31,3 +33,7 @@ instance HasPort Env where
 instance HasPersistStore Env where
   getPersistStore = view (field @"config" . typed)
   setPersistStore = flip (set (field @"config" . typed))
+
+instance HasMetrics Env where
+  getMetrics = view typed
+  setMetrics = flip (set typed)

@@ -17,6 +17,7 @@ let
             merkle = super.callPackage ./merkle {};
             storage-core = super.callPackage ./storage-core {};
             storage-server = super.callPackage ./storage-server {};
+            storage-api = super.callPackage ./storage-api {};
             orphans = super.callPackage ./orphans {};
           };
         };

@@ -28,13 +28,15 @@ executable storage-server
                      , DerivingVia
                      , DeriveGeneric
   other-modules:       Storage.Server
-                     , Storage.API
-                     , Storage.API.Object
                      , Control.Monad.App
-                     , Storage.Logger
-                     , Storage.Environment
-                     , Data.Port
                      , Data.Config
+                     , Data.Port
+                     , Storage.Environment
+                     , Storage.Logger
+                     , Storage.Server.Object
+                     , Storage.Server.System
+                     , Storage.Server.System.Stats
+                     , Storage.Metrics
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13
                      , aeson
@@ -51,6 +53,7 @@ executable storage-server
                      , servant-server
                      , servant-swagger
                      , servant-swagger-ui
+                     , storage-api
                      , storage-core
                      , transformers
                      , wai
@@ -58,5 +61,7 @@ executable storage-server
                      , yaml
                      , unliftio
                      , comonad
+                     , ekg-core
+                     , wai-middleware-metrics
   hs-source-dirs:      src
   default-language:    Haskell2010
