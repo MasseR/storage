@@ -235,5 +235,6 @@ language_extensions:
   - DataKinds
   - TypeOperators
   - GeneralizedNewtypeDeriving
+  - DeriveAnyClass
   # - TemplateHaskell
   # - QuasiQuotes

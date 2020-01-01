@@ -37,9 +37,13 @@ executable storage-server
                      , Storage.Server.System
                      , Storage.Server.System.Stats
                      , Storage.Metrics
+                     , Storage.Metrics.Carbon
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13
                      , aeson
+                     , comonad
+                     , ekg-carbon
+                     , ekg-core
                      , generic-lens
                      , katip
                      , lens
@@ -56,12 +60,10 @@ executable storage-server
                      , storage-api
                      , storage-core
                      , transformers
+                     , unliftio
                      , wai
+                     , wai-middleware-metrics
                      , warp
                      , yaml
-                     , unliftio
-                     , comonad
-                     , ekg-core
-                     , wai-middleware-metrics
   hs-source-dirs:      src
   default-language:    Haskell2010

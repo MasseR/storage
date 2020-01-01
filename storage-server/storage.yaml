@@ -1,2 +1,3 @@
 port: 8088
 persistStore: "/tmp/storage/"
+carbon:
