@@ -28,13 +28,12 @@ executable storage-server
                      , DerivingVia
                      , DeriveGeneric
   other-modules:       Storage.Server
-                     , Storage.API
-                     , Storage.API.Object
                      , Control.Monad.App
-                     , Storage.Logger
-                     , Storage.Environment
-                     , Data.Port
                      , Data.Config
+                     , Data.Port
+                     , Storage.Environment
+                     , Storage.Logger
+                     , Storage.Server.Object
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13
                      , aeson
@@ -51,6 +50,7 @@ executable storage-server
                      , servant-server
                      , servant-swagger
                      , servant-swagger-ui
+                     , storage-api
                      , storage-core
                      , transformers
                      , wai

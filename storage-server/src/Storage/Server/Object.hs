@@ -1,35 +1,34 @@
 {-# LANGUAGE ConstraintKinds     #-}
 {-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE TypeOperators       #-}
 {-# LANGUAGE RecordWildCards     #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeOperators       #-}
-module Storage.API.Object
-  ( API
-  , handler
+module Storage.Server.Object
+  ( handler
   , Reqs
   )
   where
 
-import           Servant.API
-import           Servant.API.Generic
+import           Control.Comonad        (extract)
+
+import MyPrelude
+
+import           Data.Merkle.Hash
+
+import           Pipes
+
+import           Storage                (build, consume)
+import           Storage.Persist        (HasPersistStore)
+
 import           Servant.Pipes          ()
 import           Servant.Server.Generic
 
 import           Servant.Server         (err404, err500)
 import           UnliftIO.Exception     (throwIO)
 
-import           MyPrelude
-
-import           Storage                (build, consume)
-import           Storage.Persist        (HasPersistStore)
-
-import           Pipes
-
 import           Storage.Logger
 
-import           Data.Merkle.Hash
-
-import           Control.Comonad        (extract)
+import Storage.API.Object (API(..))
 
 type Reqs r m =
   ( MonadReader r m
@@ -38,12 +37,6 @@ type Reqs r m =
   , WithLogging m
   , HasPersistStore r
   )
-
-data API route
-  = API { post :: route :- StreamBody NoFraming OctetStream (Producer ByteString IO ()) :> Post '[JSON] Hash
-        , get :: route :- Capture "hash" Hash :> StreamGet NoFraming OctetStream (Producer ByteString IO ()) }
-  deriving stock (Generic)
-
 
 handler :: forall r m. Reqs r m => API (AsServerT m)
 handler = API {..}

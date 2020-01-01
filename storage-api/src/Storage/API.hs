@@ -2,15 +2,11 @@
 {-# LANGUAGE DataKinds       #-}
 {-# LANGUAGE TypeOperators   #-}
 module Storage.API
-  ( API
-  , Reqs
-  , handler
-  )
+  ( API(..) )
   where
 
 import           Servant.API
 import           Servant.API.Generic
-import           Servant.Server.Generic
 
 import           MyPrelude
 
@@ -23,14 +19,3 @@ data API route
         }
   deriving stock (Generic)
 
-type Reqs r m =
-  ( MonadReader r m
-  , MonadIO m
-  , Object.Reqs r m
-  )
-
-handler :: Reqs r m => API (AsServerT m)
-handler =
-  API { index = pure "hello"
-      , object = toServant Object.handler
-      }
