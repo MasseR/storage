@@ -8,7 +8,7 @@ module Storage.API.Object
 
 import           Servant.API
 import           Servant.API.Generic
-import           Servant.Pipes          ()
+import           Servant.Pipes       ()
 
 import           MyPrelude
 

@@ -1,8 +1,8 @@
 {-# LANGUAGE ConstraintKinds     #-}
 {-# LANGUAGE DataKinds           #-}
-{-# LANGUAGE TypeOperators       #-}
 {-# LANGUAGE RecordWildCards     #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeOperators       #-}
 module Storage.Server.Object
   ( handler
   , Reqs
@@ -11,7 +11,7 @@ module Storage.Server.Object
 
 import           Control.Comonad        (extract)
 
-import MyPrelude
+import           MyPrelude
 
 import           Data.Merkle.Hash
 
@@ -28,7 +28,7 @@ import           UnliftIO.Exception     (throwIO)
 
 import           Storage.Logger
 
-import Storage.API.Object (API(..))
+import           Storage.API.Object     (API (..))
 
 type Reqs r m =
   ( MonadReader r m
