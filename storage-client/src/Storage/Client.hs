@@ -7,7 +7,7 @@ module Storage.Client
   , getObject
   -- * Setup
   , StorageEnv(..)
-  , HasStorageEnv
+  , HasStorageEnv(..)
   , storageEnv
   -- * Runners
   , runClient
