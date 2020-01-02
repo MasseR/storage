@@ -232,5 +232,9 @@ language_extensions:
   - DerivingStrategies
   - StandaloneDeriving
   - DerivingVia
+  - DataKinds
+  - TypeOperators
+  - GeneralizedNewtypeDeriving
+  - DeriveAnyClass
   # - TemplateHaskell
   # - QuasiQuotes
