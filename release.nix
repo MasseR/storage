@@ -18,6 +18,7 @@ let
             storage-core = super.callPackage ./storage-core {};
             storage-server = super.callPackage ./storage-server {};
             storage-api = super.callPackage ./storage-api {};
+            storage-client = super.callPackage ./storage-client {};
             orphans = super.callPackage ./orphans {};
           };
         };
@@ -32,7 +33,7 @@ let
 in
 
 rec {
-  inherit (pkgs.haskell.packages.ghc865) merkle storage-core storage-server;
+  inherit (pkgs.haskell.packages.ghc865) merkle storage-core storage-server storage-api storage-client;
   shell = pkgs.buildEnv {
     name = "shell";
     paths = [];
@@ -47,7 +48,7 @@ rec {
       (haskell.packages.ghc865.ghcWithHoogle
         (_: builtins.concatMap
           (p: p.buildInputs ++ p.propagatedBuildInputs)
-          [ merkle storage-core storage-server ]))
+          [ merkle storage-core storage-server storage-client ]))
     ];
   };
 }
