@@ -43,6 +43,10 @@ class HasStorageEnv a where
   getStorageEnv :: a -> StorageEnv
   setStorageEnv :: a -> StorageEnv -> a
 
+instance HasStorageEnv StorageEnv where
+  getStorageEnv = id
+  setStorageEnv = flip const
+
 storageEnv :: HasStorageEnv a => Lens' a StorageEnv
 storageEnv = lens getStorageEnv setStorageEnv
 
