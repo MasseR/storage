@@ -48,6 +48,7 @@ library
 test-suite test
   import:              shared-properties
   other-modules:       Test.Merkle
+                     , Test.Merkle.Hash
                      , Data.Merkle
                      , Data.Merkle.Hash
   type:                exitcode-stdio-1.0
@@ -57,3 +58,4 @@ test-suite test
       test
   build-depends:      hspec
                     , genvalidity-hspec
+                    , genvalidity-hspec-aeson

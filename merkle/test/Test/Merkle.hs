@@ -9,6 +9,9 @@ import           Test.Validity
 
 import           Control.Comonad
 
+import           Data.SafeCopy   (safeGet, safePut)
+import           Data.Serialize  (runGet, runPut)
+
 spec :: Spec
 spec = do
   describe "Merging trees" $ do
@@ -35,3 +38,6 @@ spec = do
       equivalentOnValid @(Merkle Hash) ((hash =>= hash) =>= hash) (hash =>= (hash =>= hash))
     it "duplicate . duplicate == fmap duplicate . duplicate" $
       equivalentOnValid @(Merkle Hash) (duplicate . duplicate) (fmap duplicate . duplicate)
+  describe "Serialization" $
+    it "decode . encode == id" $
+      inverseFunctionsIfSecondSucceedsOnValid @(Merkle Hash) (runPut . safePut) (runGet safeGet)
