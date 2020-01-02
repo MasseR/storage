@@ -25,6 +25,11 @@ common shared-properties
                      , pipes
                      , servant-pipes
                      , masse-prelude
+                     , http-client
+                     , servant
+                     , merkle
+                     , lens
+                     , deepseq
   default-extensions:  NoImplicitPrelude
                      , OverloadedStrings
                      , DerivingStrategies
