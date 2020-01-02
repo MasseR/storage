@@ -1,6 +1,5 @@
 {-# LANGUAGE RecordWildCards  #-}
 {-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE ViewPatterns #-}
 module Storage.Client
   (
   -- * API
@@ -33,7 +32,7 @@ import           Pipes
 
 import           Data.Merkle.Hash
 
-import Control.DeepSeq (NFData)
+import           Control.DeepSeq          (NFData)
 
 data StorageEnv
   = StorageEnv { manager :: !Manager
@@ -69,10 +68,11 @@ postObject :: Producer ByteString IO () -> ClientM Hash
 -- | Get a raw object from the storage
 getObject :: Hash -> ClientM (Producer ByteString IO ())
 
-API{ index = _
-   , system = _
-   , object = fromServant @_ @(AsClientT ClientM) ->
-      Object.API { post = postObject
-                 , get = getObject
-                 }
-   } = genericClient
+Object.API { post = postObject
+           , get = getObject } = fromServant @_ @(AsClientT ClientM) obj
+  where
+    API{ index = _
+       , system = _
+       , object = obj
+       } = genericClient
+
