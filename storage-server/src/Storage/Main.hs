@@ -1,5 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
-module Main where
+module Storage.Main where
 
 import           MyPrelude
 
@@ -16,8 +16,8 @@ import           Data.Config
 import           System.Environment     (getArgs)
 
 
-main :: IO ()
-main = withLogger $ \loggingEnv -> do
+defaultMain :: IO ()
+defaultMain = withLogger $ \loggingEnv -> do
   path <- listToMaybe <$> getArgs
   config <- readConfig path
   metrics <- newMetrics
