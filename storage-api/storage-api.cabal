@@ -30,6 +30,8 @@ library
                      , pipes
                      , ekg-core
                      , aeson
+                     , genvalidity
+                     , genvalidity-text
   default-extensions:  NoImplicitPrelude
                      , OverloadedStrings
                      , DerivingStrategies
@@ -43,3 +45,25 @@ library
   ghc-options:         -Wall
   hs-source-dirs:      src
   default-language:    Haskell2010
+
+test-suite test
+  other-modules:       Test.Storage.API.System.Stats
+  --                    , Test.Merkle.Hash
+  --                    , Data.Merkle
+  --                    , Data.Merkle.Hash
+  type:                exitcode-stdio-1.0
+  main-is:             test.hs
+  default-extensions:  OverloadedStrings
+  hs-source-dirs:
+      test
+  build-depends:       base >=4.12 && <4.13
+                     , hspec
+                     , genvalidity-hspec
+                     , genvalidity-hspec-aeson
+                     , hspec-golden-aeson
+                     , QuickCheck
+                     , masse-prelude
+                     , storage-api
+  mixins:              masse-prelude (MyPrelude as Prelude)
+                     , base (Prelude as BasePrelude)
+                     , base hiding (Prelude)
