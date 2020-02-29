@@ -12,9 +12,9 @@ import           Data.GenValidity
 import           Data.GenValidity.Arbitrary
 
 data Config
-  = Config { port         :: Port
-           , persistStore :: PersistStore
-           , carbon       :: Carbon
+  = Config { port         :: !Port
+           , persistStore :: !PersistStore
+           , carbon       :: !Carbon
            }
   deriving Arbitrary via (ViaGenValid Config)
 

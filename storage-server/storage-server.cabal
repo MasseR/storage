@@ -89,15 +89,20 @@ test-suite test
   hs-source-dirs:
       test
   build-depends:       base >=4.12 && <4.13
-                     , hspec
+                     , QuickCheck
+                     , aeson
                      , genvalidity-hspec
                      , genvalidity-hspec-aeson
+                     , hspec
                      , hspec-golden-aeson
-                     , QuickCheck
                      , masse-prelude
+                     , servant-server
                      , storage-client
+                     , storage-core
                      , storage-server
-                     , aeson
+                     , temporary
+                     , transformers
+                     , warp
   mixins:              masse-prelude (MyPrelude as Prelude)
                      , base (Prelude as BasePrelude)
                      , base hiding (Prelude)

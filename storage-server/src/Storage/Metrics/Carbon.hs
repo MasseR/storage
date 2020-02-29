@@ -1,7 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE RecordWildCards            #-}
 module Storage.Metrics.Carbon
-  ( Carbon
+  ( Carbon(..)
   , HasCarbon(..)
   , startCarbon
   )
