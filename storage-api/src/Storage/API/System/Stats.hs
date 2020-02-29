@@ -14,12 +14,13 @@ import           MyPrelude
 
 -- For testing
 import           Data.GenValidity
+import           Test.QuickCheck     (Arbitrary)
 
 newtype Counter = Counter Int64
-  deriving newtype (ToJSON, FromJSON, Validity, GenValid, Show, Eq)
+  deriving newtype (ToJSON, FromJSON, Validity, GenValid, Show, Eq, Arbitrary)
 
 newtype Gauge = Gauge Int64
-  deriving newtype (ToJSON, FromJSON, Validity, GenValid, Show, Eq)
+  deriving newtype (ToJSON, FromJSON, Validity, GenValid, Show, Eq, Arbitrary)
 
 data API route
   = API { requests200 :: route :- "requests" :> "200" :> Get '[JSON] Counter
