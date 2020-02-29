@@ -22,14 +22,22 @@ import           Control.Concurrent              (killThread)
 
 import           Data.Aeson                      (FromJSON, ToJSON)
 
+import           Data.GenValidity
+import           Data.GenValidity.Text           ()
+
 data Opts
   = Opts { host :: Text
          , port :: Int
          }
-  deriving stock (Generic, Show)
-  deriving anyclass (ToJSON, FromJSON)
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (ToJSON, FromJSON, Validity)
 
-newtype Carbon = Carbon ( Maybe Opts ) deriving newtype (ToJSON, FromJSON)
+instance GenValid Opts where
+  genValid = genValidStructurally
+  shrinkValid = shrinkValidStructurally
+
+newtype Carbon = Carbon ( Maybe Opts )
+  deriving newtype (ToJSON, FromJSON, Validity, GenValid, Show, Eq)
 
 class HasCarbon a where
   getCarbon :: a -> Carbon
