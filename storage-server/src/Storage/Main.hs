@@ -15,13 +15,17 @@ import           Data.Config
 
 import           System.Environment     (getArgs)
 
-
-defaultMain :: IO ()
-defaultMain = withLogger $ \loggingEnv -> do
+withEnv :: (Env -> IO a) -> IO a
+withEnv f = withLogger $ \loggingEnv -> do
   path <- listToMaybe <$> getArgs
   config <- readConfig path
   metrics <- newMetrics
   let environment = Env { .. }
+  f environment
+
+
+defaultMain :: IO ()
+defaultMain = withEnv $ \environment ->
   runAppM environment $ do
     logInfo "Starting up the server .."
     void startCarbon
