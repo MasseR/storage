@@ -8,7 +8,6 @@ module Storage.Client
   -- * Setup
   , StorageEnv(..)
   , HasStorageEnv(..)
-  , storageEnv
   -- * Runners
   , runClient
   , withClient
@@ -18,7 +17,7 @@ module Storage.Client
 import           Storage.API
 import qualified Storage.API.Object       as Object
 
-import           Control.Lens             (Lens', lens, view)
+import           Control.Lens             (Lens', lens, set, view)
 
 import           Network.HTTP.Client      (Manager)
 import           Servant.API.Generic      (fromServant)
@@ -40,15 +39,19 @@ data StorageEnv
                }
 
 class HasStorageEnv a where
+  {-# MINIMAL getStorageEnv, setStorageEnv | storageEnv #-}
   getStorageEnv :: a -> StorageEnv
+  getStorageEnv = view storageEnv
+
   setStorageEnv :: a -> StorageEnv -> a
+  setStorageEnv = flip (set storageEnv)
+
+  storageEnv :: Lens' a StorageEnv
+  storageEnv = lens getStorageEnv setStorageEnv
 
 instance HasStorageEnv StorageEnv where
   getStorageEnv = id
   setStorageEnv = flip const
-
-storageEnv :: HasStorageEnv a => Lens' a StorageEnv
-storageEnv = lens getStorageEnv setStorageEnv
 
 -- | Run the client to get the result
 --
