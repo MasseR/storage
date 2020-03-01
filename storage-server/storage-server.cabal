@@ -91,18 +91,21 @@ test-suite test
   build-depends:       base >=4.12 && <4.13
                      , QuickCheck
                      , aeson
-                     , http-client
-                     , servant-client
-                     , lens
                      , generic-lens
+                     , genvalidity-bytestring
                      , genvalidity-hspec
                      , genvalidity-hspec-aeson
-                     , merkle
-                     , pipes
-                     , pipes-bytestring
+                     , genvalidity
                      , hspec
                      , hspec-golden-aeson
+                     , http-client
+                     , lens
                      , masse-prelude
+                     , merkle
+                     , mtl
+                     , pipes
+                     , pipes-bytestring
+                     , servant-client
                      , servant-server
                      , storage-client
                      , storage-core
