@@ -91,6 +91,10 @@ newtype Model
 emptyModel :: Model
 emptyModel = Model { hashes = [] }
 
+-- This isn't needed in this level of testing yet.
+--
+-- This is basically dead code right now, consider removing it at some point
+-- unless it's needed by some concrete future test.
 lookupIx :: Int -> [a] -> Maybe a
 lookupIx _n [] = Nothing
 lookupIx n xs  = let ix = n `mod` length xs in Just (xs !! n)
