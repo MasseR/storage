@@ -64,6 +64,9 @@ library
                      , wai-middleware-metrics
                      , warp
                      , yaml
+                     , genvalidity
+                     , genvalidity-text
+                     , QuickCheck
   hs-source-dirs:      src
   default-language:    Haskell2010
 
@@ -75,3 +78,41 @@ executable storage-server
                      , storage-server
   hs-source-dirs:      app
   default-language:    Haskell2010
+
+test-suite test
+  other-modules:       Test.Server
+                       Test.Config
+                       Test.Golden
+  type:                exitcode-stdio-1.0
+  main-is:             test.hs
+  default-extensions:  OverloadedStrings
+  hs-source-dirs:
+      test
+  build-depends:       base >=4.12 && <4.13
+                     , QuickCheck
+                     , aeson
+                     , generic-lens
+                     , genvalidity-bytestring
+                     , genvalidity-hspec
+                     , genvalidity-hspec-aeson
+                     , genvalidity
+                     , hspec
+                     , hspec-golden-aeson
+                     , http-client
+                     , lens
+                     , masse-prelude
+                     , merkle
+                     , mtl
+                     , pipes
+                     , pipes-bytestring
+                     , servant-client
+                     , servant-server
+                     , storage-client
+                     , storage-core
+                     , storage-server
+                     , temporary
+                     , transformers
+                     , warp
+  mixins:              masse-prelude (MyPrelude as Prelude)
+                     , base (Prelude as BasePrelude)
+                     , base hiding (Prelude)

@@ -3,11 +3,11 @@ dist/
 dist-*/
 *~
 cabal.project.local
-*.json
 !nixpkgs.json
 !nixpkgs.*.json
 !miso.json
 !testdata/*.json
+!*/golden/*.json
 *.aux
 *.hp
 *.prof

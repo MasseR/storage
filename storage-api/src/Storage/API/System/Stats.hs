@@ -12,9 +12,15 @@ import           Data.Aeson          (FromJSON, ToJSON)
 
 import           MyPrelude
 
-newtype Counter = Counter Int64 deriving newtype (ToJSON, FromJSON)
+-- For testing
+import           Data.GenValidity
+import           Test.QuickCheck     (Arbitrary)
 
-newtype Gauge = Gauge Int64 deriving newtype (ToJSON, FromJSON)
+newtype Counter = Counter Int64
+  deriving newtype (ToJSON, FromJSON, Validity, GenValid, Show, Eq, Arbitrary)
+
+newtype Gauge = Gauge Int64
+  deriving newtype (ToJSON, FromJSON, Validity, GenValid, Show, Eq, Arbitrary)
 
 data API route
   = API { requests200 :: route :- "requests" :> "200" :> Get '[JSON] Counter

@@ -1,14 +1,21 @@
+{-# LANGUAGE DerivingVia                #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Data.Port where
 
-import           Control.Lens (Lens', lens)
-import           Data.Aeson   (FromJSON, ToJSON)
+import           Control.Lens     (Lens', lens)
+import           Data.Aeson       (FromJSON, ToJSON)
 import           MyPrelude
 
-newtype Port = Port Natural deriving (Show)
+import           Data.GenValidity
+import           Test.QuickCheck  (Positive (..))
+
+newtype Port = Port Natural
+  deriving newtype (Show, Eq, Num)
 
 deriving newtype instance ToJSON Port
 deriving newtype instance FromJSON Port
+deriving newtype instance Validity Port
+deriving newtype instance GenValid Port
 
 class HasPort a where
   getPort :: a -> Port

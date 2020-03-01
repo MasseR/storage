@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingVia                #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Storage.Persist
   ( PersistStore(..)
@@ -10,23 +11,35 @@ module Storage.Persist
   )
   where
 
-import           Control.Comonad       (extend, extract)
-import           Control.Lens          (Iso', Lens', iso, lens, re, view)
-import           Data.Merkle           (Merkle)
-import           Data.Merkle.Hash      (Hash, hashed, _Text)
-import           Data.Text.Strict.Lens (unpacked)
+import           Control.Comonad            (extend, extract)
+import           Control.Lens               (Iso', Lens', iso, lens, re, view)
+import           Data.Merkle                (Merkle)
+import           Data.Merkle.Hash           (Hash, hashed, _Text)
+import           Data.Text.Strict.Lens      (unpacked)
 import           MyPrelude
 import           System.FilePath.Posix
 import           UnliftIO.Directory
 
-import           System.IO.Error       (isDoesNotExistError)
+import           System.IO.Error            (isDoesNotExistError)
 
-import           Data.SafeCopy         (SafeCopy, safeGet, safePut)
-import           Data.Serialize        (runGet, runPut)
+import           Data.SafeCopy              (SafeCopy, safeGet, safePut)
+import           Data.Serialize             (runGet, runPut)
 
-import           Data.Aeson            (FromJSON, ToJSON)
+import           Data.Aeson                 (FromJSON, ToJSON)
 
-newtype PersistStore = PersistStore { persistRoot :: FilePath } deriving (Show, ToJSON, FromJSON)
+import           Data.GenValidity
+import           Data.GenValidity.Arbitrary
+import           Test.QuickCheck            (Arbitrary (..),
+                                             PrintableString (..))
+
+newtype PersistStore = PersistStore { persistRoot :: FilePath }
+  deriving (Show, ToJSON, FromJSON, Validity, Eq)
+  deriving Arbitrary via (ViaGenValid PersistStore)
+
+instance GenValid PersistStore where
+  genValid = PersistStore . getPrintableString <$> arbitrary
+  shrinkValid (PersistStore st) = PersistStore . getPrintableString <$> shrink (PrintableString st)
+
 newtype ObjectStore = ObjectStore { objectRoot :: FilePath }
 newtype TreeStore = TreeStore { treeRoot :: FilePath }
 
