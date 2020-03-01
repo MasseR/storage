@@ -45,7 +45,9 @@ import           Servant.Client              (parseBaseUrl)
 import           Control.Lens                (set, (<>=))
 import           Data.Generics.Product       (field)
 
-
+-- | Start a temporary server on a random port
+--
+-- The callback gets an environment that can be used by the storage-client package
 withServer :: (StorageEnv -> IO a) -> IO a
 withServer f = withTestEnv $ \env ->
   testWithApplication (pure (app (nat env))) $ \port -> do
@@ -56,6 +58,10 @@ withServer f = withTestEnv $ \env ->
   where
     nat env = Servant.Handler . ExceptT . try . runAppM env
 
+-- | Create a test environment
+--
+-- In the test environment the port is invalid, carbon is not set and the
+-- persist store path is set to a temporary directory
 withTestEnv :: (Env -> IO a) -> IO a
 withTestEnv f =
   withLogger $ \loggingEnv ->
