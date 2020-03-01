@@ -104,6 +104,8 @@ instance Arbitrary Command where
   arbitrary = WriteObject <$> genValid
   shrink (WriteObject lbs) = WriteObject <$> shrinkValid lbs
 
+-- Test that writing creates objects that can be read back, even in the
+-- presence of other objects
 prop_ops :: StorageEnv -> [Command] -> Property
 prop_ops storage commands =
   monadic exec $ for_ commands $ \case
