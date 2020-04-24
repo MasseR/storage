@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds        #-}
 {-# LANGUAGE RecordWildCards  #-}
-{-# LANGUAGE TypeApplications #-}
 module Storage.Metrics.Influxdb where
 
 import           MyPrelude
