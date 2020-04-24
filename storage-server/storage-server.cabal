@@ -42,6 +42,7 @@ library
                      , aeson
                      , comonad
                      , ekg-carbon
+                     , ekg-influxdb >= 0.2.0
                      , ekg-core
                      , generic-lens
                      , katip
