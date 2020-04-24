@@ -4,17 +4,16 @@ module Storage.Environment
   ( Env(..) )
   where
 
-import           Control.Lens           (set, view)
-import           Data.Generics.Product  (field, typed)
+import           Control.Lens          (set, view)
+import           Data.Generics.Product (field, typed)
 import           MyPrelude
-import           Storage.Logger         (HasLoggingEnv (..), LoggingEnv)
+import           Storage.Logger        (HasLoggingEnv (..), LoggingEnv)
 
 import           Data.Config
 import           Data.Port
 
-import           Storage.Metrics        (HasMetrics (..), Metrics)
-import           Storage.Metrics.Carbon (HasCarbon (..))
-import           Storage.Persist        (HasPersistStore (..))
+import           Storage.Metrics       (HasMetrics (..), Metrics)
+import           Storage.Persist       (HasPersistStore (..))
 
 data Env
   = Env { loggingEnv :: LoggingEnv
@@ -39,6 +38,6 @@ instance HasMetrics Env where
   getMetrics = view typed
   setMetrics = flip (set typed)
 
-instance HasCarbon Env where
-  getCarbon = view (field @"config" . typed)
-  setCarbon = flip (set (field @"config" . typed))
+instance HasConfig Env where
+  config = typed @Config
+

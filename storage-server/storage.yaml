@@ -1,3 +1,7 @@
 port: 8091
 persistStore: "/tmp/storage/"
-carbon:
+metrics:
+  influx:
+    host: 10.233.1.2
+    port: 8086
+    database: metrics

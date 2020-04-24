@@ -1,0 +1,37 @@
+{
+    "seed": 6603900266558567620,
+    "samples": [
+        {
+            "influx": {
+                "database": "`~",
+                "host": "\u0014",
+                "port": 27
+            }
+        },
+        {
+            "carbon": {
+                "host": "",
+                "port": 17
+            }
+        },
+        {
+            "carbon": {
+                "host": "P\u0005",
+                "port": 2
+            }
+        },
+        {
+            "influx": {
+                "database": "q򶖹!>\u0003(",
+                "host": "$[SW",
+                "port": -15
+            }
+        },
+        {
+            "carbon": {
+                "host": "?\u0003\u0015D",
+                "port": 16
+            }
+        }
+    ]
+}
