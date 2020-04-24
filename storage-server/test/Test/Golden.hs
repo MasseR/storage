@@ -11,8 +11,6 @@ import           Test.QuickCheck         (Arbitrary)
 
 import           Data.Aeson              (FromJSON, ToJSON)
 
-import           Data.Typeable
-
 settings :: Settings
 settings = defaultSettings { useModuleNameAsSubDirectory = True }
 

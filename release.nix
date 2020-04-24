@@ -13,6 +13,12 @@ let
       packages = pkgs.haskell.packages // {
         ghc865 = pkgs.haskell.packages.ghc865.override {
           overrides = self: super: with pkgs.haskell.lib; rec {
+            # Get rid of this once nix has 0.2.0 or newer
+            ekg-influxdb = dontCheck ((super.callHackageDirect {
+              pkg = "ekg-influxdb";
+              ver = "0.2.0.0";
+              sha256 = "1x9ynlgr9lbnbpjkzrfi5zmycbrsckn9zsxf1q199xwkp1k7iif8";
+            }) {});
             masse-prelude = super.callPackage masse-prelude-src {};
             merkle = super.callPackage ./merkle {};
             storage-core = super.callPackage ./storage-core {};

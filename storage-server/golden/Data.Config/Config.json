@@ -1,39 +1,46 @@
 {
-    "seed": -1167300061959456873,
+    "seed": -4934255896672364744,
     "samples": [
         {
-            "persistStore": "]D[hxBO_59! #H%PGc:m5",
-            "carbon": null,
-            "port": 27
+            "metrics": null,
+            "persistStore": " +z%J1|Y+%N2YdXjxZ*=3x*^>}C",
+            "port": 26
         },
         {
-            "persistStore": "",
-            "carbon": {
-                "host": "򼮍!􆢡",
-                "port": -23
+            "metrics": null,
+            "persistStore": "'fj(v9'{7D!foz/B)rWUl",
+            "port": 22
+        },
+        {
+            "metrics": {
+                "carbon": {
+                    "host": "􇞠a\u0001",
+                    "port": -20
+                }
             },
-            "port": 14
-        },
-        {
-            "persistStore": "}cB",
-            "carbon": {
-                "host": "\u0005dV񅭳qd",
-                "port": 28
-            },
-            "port": 0
-        },
-        {
-            "persistStore": "Z-KE^g9WR~NN9zi3ZiUco{wr",
-            "carbon": null,
-            "port": 28
-        },
-        {
-            "persistStore": " ",
-            "carbon": {
-                "host": ":",
-                "port": 20
-            },
+            "persistStore": "^E=E+PS_",
             "port": 18
+        },
+        {
+            "metrics": {
+                "carbon": {
+                    "host": "g>",
+                    "port": 23
+                }
+            },
+            "persistStore": "棿Yj|df<'舔UUa9{Ehe !Bu",
+            "port": 7
+        },
+        {
+            "metrics": {
+                "influx": {
+                    "database": "\u0019",
+                    "host": "\u0001\u0012",
+                    "port": -12
+                }
+            },
+            "persistStore": "]ywU-p贯b=r𨙴X;ꯠS*a,W+3Oq",
+            "port": 23
         }
     ]
 }

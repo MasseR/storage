@@ -1,19 +1,24 @@
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE DataKinds        #-}
+{-# LANGUAGE RecordWildCards  #-}
+{-# LANGUAGE TypeApplications #-}
 module Storage.Main where
 
 import           MyPrelude
 
 import           Control.Monad.App
-import           Storage.Environment    (Env (..))
-import           Storage.Server         (server)
+import           Storage.Environment   (Env (..))
+import           Storage.Server        (server)
 
-import           Storage.Logger         (logInfo, withLogger)
-import           Storage.Metrics        (newMetrics)
-import           Storage.Metrics.Carbon (startCarbon)
+import           Storage.Logger        (logInfo, withLogger)
+import           Storage.Metrics       (newMetrics)
+import           Storage.Metrics.Push  (startMetricsPush)
 
-import           Data.Config
+import           Data.Config           (readConfig)
 
-import           System.Environment     (getArgs)
+import           Control.Lens          (view)
+import           Data.Generics.Product (field)
+
+import           System.Environment    (getArgs)
 
 withEnv :: (Env -> IO a) -> IO a
 withEnv f = withLogger $ \loggingEnv -> do
@@ -28,5 +33,5 @@ defaultMain :: IO ()
 defaultMain = withEnv $ \environment ->
   runAppM environment $ do
     logInfo "Starting up the server .."
-    void startCarbon
+    traverse_ startMetricsPush (view (field @"config" . field @"metrics") environment)
     server

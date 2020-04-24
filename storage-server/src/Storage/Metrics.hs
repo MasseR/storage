@@ -1,7 +1,6 @@
 module Storage.Metrics
   ( Metrics
   , HasMetrics(..)
-  , metrics
   , _Store
   , metricsMiddleware
   , newMetrics
@@ -9,7 +8,7 @@ module Storage.Metrics
   )
   where
 
-import           Control.Lens        (Lens', ix, lens, preview, view)
+import           Control.Lens        (Lens', ix, lens, preview, set, view)
 import           System.Metrics      (Store, Value, newStore, registerGcMetrics,
                                       sampleAll)
 
@@ -21,11 +20,15 @@ import           MyPrelude
 newtype Metrics = Metrics { getStore :: Store }
 
 class HasMetrics a where
+  {-# MINIMAL getMetrics, setMetrics | metrics #-}
   getMetrics :: a -> Metrics
-  setMetrics :: a -> Metrics -> a
+  getMetrics = view metrics
 
-metrics :: HasMetrics a => Lens' a Metrics
-metrics = lens getMetrics setMetrics
+  setMetrics :: a -> Metrics -> a
+  setMetrics = flip (set metrics)
+
+  metrics :: Lens' a Metrics
+  metrics = lens getMetrics setMetrics
 
 _Store :: Lens' Metrics Store
 _Store = lens getStore (\_ s -> Metrics s)
