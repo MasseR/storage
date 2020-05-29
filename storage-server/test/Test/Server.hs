@@ -20,15 +20,14 @@ import           Control.Monad.State         (MonadState, execStateT)
 import           Control.Monad.Trans         (lift)
 import           Control.Monad.Trans.Maybe   (MaybeT (..), runMaybeT)
 
-import           Data.Config
+import           Data.Config                 (Config (..))
 import           Network.HTTP.Client         (defaultManagerSettings,
                                               newManager)
 import           Storage.Client              (StorageEnv (..), getObject,
                                               postObject, withClient)
 import           Storage.Environment
-import           Storage.Logger              (logInfo, withLogger)
+import           Storage.Logger              (withLogger)
 import           Storage.Metrics             (newMetrics)
-import           Storage.Metrics.Carbon      (Carbon (..))
 import           Storage.Persist             (PersistStore (..))
 import           Storage.Server              (app)
 
@@ -72,8 +71,8 @@ withTestEnv f =
     withSystemTempDirectory "storage-test" $ \path -> do
       let config = Config { port = 0
                           , persistStore = PersistStore path
-                          , carbon = Carbon Nothing
                           , dataDir = path </> "data"
+                          , metrics = Nothing
                           }
       metrics <- newMetrics
       withConnection ":memory:" $ \connection -> do
@@ -87,7 +86,7 @@ writeFileStorage lbs =
 readFileStorage :: Hash -> ReaderT StorageEnv IO (Maybe LByteString)
 readFileStorage h =
   withClient (getObject h) $ \case
-    Left e -> pure Nothing
+    Left _ -> pure Nothing
     Right producer -> Just <$> liftIO (toLazyM producer)
 
 newtype Model
@@ -103,7 +102,7 @@ emptyModel = Model { hashes = [] }
 -- unless it's needed by some concrete future test.
 lookupIx :: Int -> [a] -> Maybe a
 lookupIx _n [] = Nothing
-lookupIx n xs  = let ix = n `mod` length xs in Just (xs !! n)
+lookupIx n xs  = let ix = n `mod` length xs in Just (xs !! ix)
 
 execWrite :: ( MonadIO m, MonadState Model m ) => StorageEnv -> LByteString -> PropertyM m ()
 execWrite storage lbs = void $ runMaybeT $ do

@@ -1,41 +1,52 @@
 {
-    "seed": 3877462111239344871,
+    "seed": 8548895157162321613,
     "samples": [
         {
-            "dataDir": "8\u0007\"",
-            "persistStore": "u@ooF`jG^",
-            "carbon": null,
-            "port": 19
-        },
-        {
-            "dataDir": "I]񌳾",
-            "persistStore": "9V/hppU1)P&j@$!E8b1{e^>M",
-            "carbon": null,
-            "port": 18
-        },
-        {
-            "dataDir": "x󠑶",
-            "persistStore": "alY𦇇85OD-e",
-            "carbon": {
-                "host": "}",
-                "port": -30
+            "dataDir": "/",
+            "metrics": {
+                "influx": {
+                    "database": "\u00134b𸢦",
+                    "host": "\u0008଀",
+                    "port": 2
+                }
             },
-            "port": 7
+            "persistStore": "hb.TlUJO% [A4r-F2=KB'T,z*",
+            "port": 10
         },
         {
-            "dataDir": "Z\u001a𝯟\u0011",
-            "persistStore": "=F7L𢣦Vsr1})ccgoqc",
-            "carbon": null,
+            "dataDir": "\\",
+            "metrics": null,
+            "persistStore": "䖉-F+W銌",
+            "port": 28
+        },
+        {
+            "dataDir": "r򦷠^󌼆󺇳",
+            "metrics": {
+                "carbon": {
+                    "host": "\u0015+\u0015",
+                    "port": -15
+                }
+            },
+            "persistStore": "+u>DEkz𧠤}]Iu",
+            "port": 3
+        },
+        {
+            "dataDir": "E",
+            "metrics": {
+                "influx": {
+                    "database": "xfE",
+                    "host": "K$",
+                    "port": -15
+                }
+            },
+            "persistStore": "𩱕",
             "port": 23
         },
         {
-            "dataDir": "YN􇕄񈍆",
-            "persistStore": "|kP",
-            "carbon": {
-                "host": "\u0014",
-                "port": 5
-            },
-            "port": 25
+            "dataDir": "\u0000uk",
+            "metrics": null,
+            "persistStore": "Naj41ctZ:'@Xz6>Y",
+            "port": 10
         }
     ]
 }

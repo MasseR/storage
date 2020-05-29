@@ -22,7 +22,7 @@ import           Database.SQLite.Simple.FromField
 import           Data.Proxy                       (Proxy (..))
 import           Data.Time                        (LocalTime)
 
-import           Control.Lens                     (makeLenses, preview, re)
+import           Control.Lens                     (makeLenses, preview)
 
 newtype HashKey = HashKey Hash
   deriving (Show, Eq, Ord)

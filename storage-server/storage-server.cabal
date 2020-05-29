@@ -18,6 +18,7 @@ build-type:          Simple
 extra-source-files:  CHANGELOG.md
 
 library
+  ghc-options: -Wall -Werror
   default-extensions:  NoImplicitPrelude
                      , OverloadedStrings
                      , DerivingStrategies
@@ -28,6 +29,7 @@ library
   exposed-modules:     Storage.Server
                      , Control.Monad.App
                      , Data.Config
+                     , Data.Config.Metrics
                      , Data.Port
                      , Database
                      , Database.Migrate
@@ -37,6 +39,8 @@ library
                      , Storage.Main
                      , Storage.Metrics
                      , Storage.Metrics.Carbon
+                     , Storage.Metrics.Influxdb
+                     , Storage.Metrics.Push
                      , Storage.Server.Object
                      , Storage.Server.System
                      , Storage.Server.System.Stats
@@ -50,10 +54,12 @@ library
                      , comonad
                      , ekg-carbon
                      , ekg-core
+                     , ekg-influxdb >= 0.2.0
                      , filepath
                      , generic-lens
                      , genvalidity
                      , genvalidity-text
+                     , influxdb
                      , katip
                      , lens
                      , masse-prelude
@@ -89,8 +95,10 @@ executable storage-server
   default-language:    Haskell2010
 
 test-suite test
+  ghc-options: -Wall -Werror -threaded
   other-modules:       Test.Server
                        Test.Config
+                       Test.Config.Metrics
                        Test.Golden
                        Test.Database.Migrate
   type:                exitcode-stdio-1.0

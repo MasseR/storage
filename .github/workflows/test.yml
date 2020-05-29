@@ -11,3 +11,9 @@ jobs:
     - run: nix run nixpkgs.hlint -c hlint .
     - run: nix build -f release.nix
     - run: nix-shell ./shell.nix --run './restyle.sh' && git diff --exit-code
+    - uses: cachix/cachix-action@v5
+      with:
+        name: masser-ebook-manager
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        file: release.nix
