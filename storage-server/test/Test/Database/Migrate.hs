@@ -4,7 +4,6 @@ import           Test.Hspec
 
 import           Database
 import           Database.Beam
-import           Database.Object
 import           Database.SQLite.Simple (Connection, withConnection)
 
 import           Control.Lens           ((^.))

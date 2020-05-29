@@ -1,4 +1,8 @@
 port: 8091
 persistStore: "/tmp/storage/"
 dataDir: "/tmp/storage/data/"
-carbon:
+metrics:
+  influx:
+    host: 10.233.1.2
+    port: 8086
+    database: metrics

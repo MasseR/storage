@@ -76,5 +76,5 @@ handler = API {..}
       maybe (throwIO err404) (\p -> withRunInIO $ \r -> pure (hoist r p)) x
     getObjects :: m [Hash]
     getObjects = do
-      objects <- runDB (runSelectReturningList listObjectsQ)
-      pure $ toListOf (traverse . objectId . from _HashKey) objects
+      objs <- runDB (runSelectReturningList listObjectsQ)
+      pure $ toListOf (traverse . objectId . from _HashKey) objs

@@ -1,5 +1,7 @@
-{-# LANGUAGE NamedFieldPuns  #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE DataKinds        #-}
+{-# LANGUAGE NamedFieldPuns   #-}
+{-# LANGUAGE RecordWildCards  #-}
+{-# LANGUAGE TypeApplications #-}
 module Storage.Main where
 
 import           MyPrelude
@@ -10,12 +12,15 @@ import           Storage.Server         (server)
 
 import           Storage.Logger         (logInfo, withLogger)
 import           Storage.Metrics        (newMetrics)
-import           Storage.Metrics.Carbon (startCarbon)
+import           Storage.Metrics.Push   (startMetricsPush)
 
-import           Data.Config
+import           Data.Config            (Config (..), readConfig)
+
+import           Control.Lens           (view)
+import           Data.Generics.Product  (field)
+import           System.FilePath        ((</>))
 
 import           System.Environment     (getArgs)
-import           System.FilePath        ((</>))
 
 import           Database.SQLite.Simple (withConnection)
 
@@ -35,5 +40,5 @@ defaultMain = do
   withEnv config $ \environment ->
     runAppM environment $ do
       logInfo "Starting up the server .."
-      void startCarbon
+      traverse_ startMetricsPush (view (field @"config" . field @"metrics") environment)
       server
