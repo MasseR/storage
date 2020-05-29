@@ -7,7 +7,6 @@ import           Data.Aeson       (FromJSON, ToJSON)
 import           MyPrelude
 
 import           Data.GenValidity
-import           Test.QuickCheck  (Positive (..))
 
 newtype Port = Port Natural
   deriving newtype (Show, Eq, Num)
