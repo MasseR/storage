@@ -29,6 +29,9 @@ library
                      , Control.Monad.App
                      , Data.Config
                      , Data.Port
+                     , Database
+                     , Database.Migrate
+                     , Database.Object
                      , Storage.Environment
                      , Storage.Logger
                      , Storage.Main
@@ -41,6 +44,9 @@ library
   build-depends:       base >=4.12 && <4.13
                      , QuickCheck
                      , aeson
+                     , beam-core
+                     , beam-migrate
+                     , beam-sqlite
                      , comonad
                      , ekg-carbon
                      , ekg-core
@@ -59,8 +65,10 @@ library
                      , servant-server
                      , servant-swagger
                      , servant-swagger-ui
+                     , sqlite-simple
                      , storage-api
                      , storage-core
+                     , time
                      , transformers
                      , unliftio
                      , wai
@@ -83,6 +91,7 @@ test-suite test
   other-modules:       Test.Server
                        Test.Config
                        Test.Golden
+                       Test.Database.Migrate
   type:                exitcode-stdio-1.0
   main-is:             test.hs
   default-extensions:  OverloadedStrings
@@ -91,6 +100,7 @@ test-suite test
   build-depends:       base >=4.12 && <4.13
                      , QuickCheck
                      , aeson
+                     , beam-core
                      , generic-lens
                      , genvalidity
                      , genvalidity-bytestring
@@ -107,6 +117,7 @@ test-suite test
                      , pipes-bytestring
                      , servant-client
                      , servant-server
+                     , sqlite-simple
                      , storage-client
                      , storage-core
                      , storage-server

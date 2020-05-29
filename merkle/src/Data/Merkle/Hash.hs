@@ -22,14 +22,15 @@ import           Data.List.NonEmpty          (NonEmpty)
 
 import           Data.Aeson                  (FromJSON (..), ToJSON (..))
 
-import           Web.HttpApiData             (ToHttpApiData(..), FromHttpApiData (..))
+import           Web.HttpApiData             (FromHttpApiData (..),
+                                              ToHttpApiData (..))
 
 -- For testing
 import           Data.GenValidity
 import           Data.GenValidity.ByteString ()
 
 newtype Hash = Hash { getHash :: Digest SHA256 }
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, Generic, Ord)
 
 newtype B16 = B16 { get16 :: Text } deriving (Show, Eq, Generic, ToJSON, FromJSON)
 
