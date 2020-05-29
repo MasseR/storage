@@ -22,6 +22,7 @@ import           Database.Beam.Migrate
 import           Database.Beam.Sqlite.Connection (Sqlite, SqliteM,
                                                   runBeamSqlite)
 import           Database.SQLite.Simple          (Connection)
+import qualified Database.SQLite.Simple as SQLite
 
 -- Table definitions
 import           Database.Object
@@ -65,3 +66,8 @@ migrationSteps = migrationStep "Initial schema" v1
     -- on how to do it
     v1 :: () -> Migration Sqlite (CheckedDatabaseSettings Sqlite Storage)
     v1 _ = Storage <$> createTable "objects" migObjectT
+
+withTransaction :: (WithDB r m, MonadUnliftIO m) => m a -> m a
+withTransaction f = do
+  conn <- view connection
+  withRunInIO $ \runInIO -> SQLite.withTransaction conn (runInIO f)

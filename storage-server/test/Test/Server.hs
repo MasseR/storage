@@ -8,7 +8,7 @@ module Test.Server where
 
 import           Prelude                     hiding (assert)
 
-import           Data.List                   (sort)
+import           Data.List                   (group, sort)
 
 import           Data.GenValidity
 import           Data.GenValidity.ByteString ()
@@ -127,7 +127,7 @@ execWrite storage lbs = void $ runMaybeT $ do
 
 execList :: (MonadIO m, MonadState Model m) => StorageEnv -> PropertyM m ()
 execList storage = do
-  wanted <- sort <$> lift (use (field @"hashes"))
+  wanted <- mapMaybe headMay . group . sort <$> lift (use (field @"hashes"))
   got <- sort <$> liftIO (runReaderT listFileStorage storage)
   unless (got == wanted) $ lift $ fail (show got <> " /= " <> show wanted)
 

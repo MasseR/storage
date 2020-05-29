@@ -9,6 +9,7 @@ module Storage.Server.Object
   where
 
 import           Control.Comonad        (extract)
+import           Control.Monad          (when)
 
 import           MyPrelude
 
@@ -47,6 +48,10 @@ listObjectsQ :: SqlSelect Sqlite Object
 listObjectsQ = select $
   all_ (storage ^. objects)
 
+lookupHash :: Hash -> SqlSelect Sqlite Object
+lookupHash h = select $
+  filter_ (\x -> x ^. objectId ==. val_ (HashKey h)) $ all_ (storage ^. objects)
+
 writeHash :: Hash -> SqlInsert Sqlite ObjectT
 writeHash h =
   insert (storage ^. objects) $ insertExpressions [ Object (val_ (HashKey h)) default_ ]
@@ -57,7 +62,11 @@ handler = API {..}
     postObject :: Producer ByteString IO () -> m Hash
     postObject bs = do
       tree <- build (hoist liftIO bs)
-      for_ tree $ \t -> runDB $ runInsert $ writeHash (extract t)
+      for_ tree $ \t -> withTransaction $ runDB $ do
+        let h = extract t
+        exists <- runSelectReturningOne $ lookupHash h
+        when (null exists) $
+          runInsert $ writeHash h
       maybe (throwIO err500) (pure . extract) tree
     getObject :: Hash -> m (Producer ByteString IO ())
     getObject h = do

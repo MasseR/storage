@@ -13,7 +13,10 @@ import           Data.Merkle.Hash                 (Hash (..), hashed, _Text)
 import           Database.Beam                    (Beamable, Columnar,
                                                    DataType (..),
                                                    FromBackendRow (..),
-                                                   Table (..), timestamptz)
+                                                   HasSqlEqualityCheck (..),
+                                                   Table (..),
+                                                   currentTimestamp_,
+                                                   timestamptz)
 import           Database.Beam.Backend.SQL.SQL92
 import           Database.Beam.Migrate
 import           Database.Beam.Sqlite.Connection  (Sqlite)
@@ -34,11 +37,15 @@ instance HasSqlValueSyntax SqliteValueSyntax HashKey where
   sqlValueSyntax = sqlValueSyntax . view (from _HashKey . re hashed . re _Text)
 
 
+
 _HashKey :: Iso' Hash HashKey
 _HashKey = iso HashKey (\(HashKey h) -> h)
 
 instance HasDefaultSqlDataType Sqlite HashKey where
   defaultSqlDataType _ _ _ = sqliteTextType
+
+instance HasSqlEqualityCheck Sqlite HashKey where
+
 
 instance FromBackendRow Sqlite HashKey where
 
@@ -74,5 +81,5 @@ deriving instance Ord (PrimaryKey ObjectT Identity)
 migObjectT :: TableSchema Sqlite ObjectT
 migObjectT =
   Object { _objectId = field "object_hash" (DataType (defaultSqlDataType (Proxy :: Proxy HashKey) (Proxy :: Proxy Sqlite) False))
-         , _created = field "created" timestamptz
+         , _created = field "created" timestamptz (defaultTo_ currentTimestamp_)
          }
