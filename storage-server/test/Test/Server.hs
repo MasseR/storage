@@ -8,6 +8,8 @@ module Test.Server where
 
 import           Prelude                     hiding (assert)
 
+import           Data.List                   (sort)
+
 import           Data.GenValidity
 import           Data.GenValidity.ByteString ()
 
@@ -24,7 +26,8 @@ import           Data.Config
 import           Network.HTTP.Client         (defaultManagerSettings,
                                               newManager)
 import           Storage.Client              (StorageEnv (..), getObject,
-                                              postObject, withClient)
+                                              getObjects, postObject,
+                                              withClient)
 import           Storage.Environment
 import           Storage.Logger              (logInfo, withLogger)
 import           Storage.Metrics             (newMetrics)
@@ -42,11 +45,13 @@ import           Control.Monad.Trans.Except  (ExceptT (..))
 import           Servant                     (Handler (..))
 import           Servant.Client              (parseBaseUrl)
 
-import           Control.Lens                (set, (<>=))
+import           Control.Lens                (set, use, (<>=))
 import           Data.Generics.Product       (field)
 
 import           System.FilePath             ((</>))
 
+import           Database
+import           Database.Migrate
 import           Database.SQLite.Simple      (withConnection)
 
 -- | Start a temporary server on a random port
@@ -77,6 +82,7 @@ withTestEnv f =
                           }
       metrics <- newMetrics
       withConnection ":memory:" $ \connection -> do
+        runReaderT migrate connection
         let environment = Env { .. }
         f environment
 
@@ -89,6 +95,12 @@ readFileStorage h =
   withClient (getObject h) $ \case
     Left e -> pure Nothing
     Right producer -> Just <$> liftIO (toLazyM producer)
+
+listFileStorage :: ReaderT StorageEnv IO [Hash]
+listFileStorage =
+  withClient getObjects $ \case
+    Left e -> pure []
+    Right p -> pure p
 
 newtype Model
   = Model { hashes :: [ Hash ] }
@@ -113,12 +125,19 @@ execWrite storage lbs = void $ runMaybeT $ do
 
   lift (run (field @"hashes" <>= [h]))
 
-newtype Command = WriteObject LByteString
+execList :: (MonadIO m, MonadState Model m) => StorageEnv -> PropertyM m ()
+execList storage = do
+  wanted <- sort <$> lift (use (field @"hashes"))
+  got <- sort <$> liftIO (runReaderT listFileStorage storage)
+  unless (got == wanted) $ lift $ fail (show got <> " /= " <> show wanted)
+
+data Command
+  = WriteObject LByteString
+  | ListObjects
   deriving Show
 
 instance Arbitrary Command where
-  arbitrary = WriteObject <$> genValid
-  shrink (WriteObject lbs) = WriteObject <$> shrinkValid lbs
+  arbitrary = oneof [ WriteObject <$> genValid, pure ListObjects ]
 
 -- Test that writing creates objects that can be read back, even in the
 -- presence of other objects
@@ -126,9 +145,11 @@ prop_ops :: StorageEnv -> [Command] -> Property
 prop_ops storage commands =
   monadic exec $ for_ commands $ \case
     WriteObject lbs -> execWrite storage lbs
+    ListObjects -> execList storage
   where
     shower = \case
       WriteObject _ -> "WriteObject"
+      ListObjects -> "ListObjects"
     hashLabeler s | length (hashes s) > 30 = "> 30 hashes"
                   | length (hashes s) > 20 = "> 20 hashes"
                   | length (hashes s) > 10 = "> 10 hashes"

@@ -5,6 +5,8 @@ module Storage.Client
   -- * API
     postObject
   , getObject
+  , getObjects
+
   -- * Setup
   , StorageEnv(..)
   , HasStorageEnv(..)
@@ -74,6 +76,9 @@ postObject :: Producer ByteString IO () -> ClientM Hash
 
 -- | Get a raw object from the storage
 getObject :: Hash -> ClientM (Producer ByteString IO ())
+
+-- | List all the known keys
+getObjects :: ClientM [Hash]
 
 Object.API {..} = fromServant @_ @(AsClientT ClientM) obj
   where

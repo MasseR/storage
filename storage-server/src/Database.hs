@@ -7,6 +7,7 @@
 module Database
   ( module Database
   , Connection
+  , Sqlite
   )
   where
 

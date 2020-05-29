@@ -8,24 +8,34 @@ import           MyPrelude
 
 import           Data.Functor.Identity
 
-import           Data.Merkle.Hash                 (Hash (..), _Text, hashed)
+import           Data.Merkle.Hash                 (Hash (..), hashed, _Text)
 
 import           Database.Beam                    (Beamable, Columnar,
                                                    DataType (..),
                                                    FromBackendRow (..),
                                                    Table (..), timestamptz)
+import           Database.Beam.Backend.SQL.SQL92
 import           Database.Beam.Migrate
 import           Database.Beam.Sqlite.Connection  (Sqlite)
-import           Database.Beam.Sqlite.Syntax      (sqliteTextType)
+import           Database.Beam.Sqlite.Syntax      (SqliteValueSyntax,
+                                                   sqliteTextType)
 import           Database.SQLite.Simple.FromField
 
 import           Data.Proxy                       (Proxy (..))
 import           Data.Time                        (LocalTime)
 
-import           Control.Lens                     (makeLenses, preview, re)
+import           Control.Lens                     (Iso', from, iso, makeLenses,
+                                                   preview, re, view)
 
 newtype HashKey = HashKey Hash
   deriving (Show, Eq, Ord)
+
+instance HasSqlValueSyntax SqliteValueSyntax HashKey where
+  sqlValueSyntax = sqlValueSyntax . view (from _HashKey . re hashed . re _Text)
+
+
+_HashKey :: Iso' Hash HashKey
+_HashKey = iso HashKey (\(HashKey h) -> h)
 
 instance HasDefaultSqlDataType Sqlite HashKey where
   defaultSqlDataType _ _ _ = sqliteTextType
