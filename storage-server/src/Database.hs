@@ -22,7 +22,7 @@ import           Database.Beam.Migrate
 import           Database.Beam.Sqlite.Connection (Sqlite, SqliteM,
                                                   runBeamSqlite)
 import           Database.SQLite.Simple          (Connection)
-import qualified Database.SQLite.Simple as SQLite
+import qualified Database.SQLite.Simple          as SQLite
 
 -- Table definitions
 import           Database.Object
