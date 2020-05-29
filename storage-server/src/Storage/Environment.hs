@@ -16,12 +16,19 @@ import           Storage.Metrics        (HasMetrics (..), Metrics)
 import           Storage.Metrics.Carbon (HasCarbon (..))
 import           Storage.Persist        (HasPersistStore (..))
 
+import           Database               (Connection, HasConnection (..))
+
 data Env
   = Env { loggingEnv :: LoggingEnv
         , config     :: Config
         , metrics    :: Metrics
+        , connection :: Connection
         }
   deriving Generic
+
+instance HasConnection Env where
+  connection = typed @Connection
+
 
 instance HasLoggingEnv Env where
   getLoggingEnv = view typed

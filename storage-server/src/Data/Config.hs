@@ -15,6 +15,7 @@ data Config
   = Config { port         :: !Port
            , persistStore :: !PersistStore
            , carbon       :: !Carbon
+           , dataDir      :: FilePath
            }
   deriving Arbitrary via (ViaGenValid Config)
 

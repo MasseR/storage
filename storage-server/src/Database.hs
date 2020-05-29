@@ -4,7 +4,11 @@
 {-# LANGUAGE ScopedTypeVariables   #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
-module Database where
+module Database
+  ( module Database
+  , Connection
+  )
+  where
 
 import           MyPrelude
 

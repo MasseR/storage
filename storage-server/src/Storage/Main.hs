@@ -1,3 +1,4 @@
+{-# LANGUAGE NamedFieldPuns  #-}
 {-# LANGUAGE RecordWildCards #-}
 module Storage.Main where
 
@@ -14,19 +15,25 @@ import           Storage.Metrics.Carbon (startCarbon)
 import           Data.Config
 
 import           System.Environment     (getArgs)
+import           System.FilePath        ((</>))
 
-withEnv :: (Env -> IO a) -> IO a
-withEnv f = withLogger $ \loggingEnv -> do
-  path <- listToMaybe <$> getArgs
-  config <- readConfig path
-  metrics <- newMetrics
-  let environment = Env { .. }
-  f environment
+import           Database.SQLite.Simple (withConnection)
+
+withEnv :: Config -> (Env -> IO a) -> IO a
+withEnv config@Config{dataDir} f =
+  withConnection (dataDir </> "storage.sqlite") $ \connection ->
+  withLogger $ \loggingEnv -> do
+    metrics <- newMetrics
+    let environment = Env { .. }
+    f environment
 
 
 defaultMain :: IO ()
-defaultMain = withEnv $ \environment ->
-  runAppM environment $ do
-    logInfo "Starting up the server .."
-    void startCarbon
-    server
+defaultMain = do
+  path <- listToMaybe <$> getArgs
+  config <- readConfig path
+  withEnv config $ \environment ->
+    runAppM environment $ do
+      logInfo "Starting up the server .."
+      void startCarbon
+      server

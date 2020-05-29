@@ -50,6 +50,7 @@ library
                      , comonad
                      , ekg-carbon
                      , ekg-core
+                     , filepath
                      , generic-lens
                      , genvalidity
                      , genvalidity-text
@@ -101,6 +102,7 @@ test-suite test
                      , QuickCheck
                      , aeson
                      , beam-core
+                     , filepath
                      , generic-lens
                      , genvalidity
                      , genvalidity-bytestring

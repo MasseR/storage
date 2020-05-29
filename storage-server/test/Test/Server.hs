@@ -45,6 +45,10 @@ import           Servant.Client              (parseBaseUrl)
 import           Control.Lens                (set, (<>=))
 import           Data.Generics.Product       (field)
 
+import           System.FilePath             ((</>))
+
+import           Database.SQLite.Simple      (withConnection)
+
 -- | Start a temporary server on a random port
 --
 -- The callback gets an environment that can be used by the storage-client package
@@ -69,10 +73,12 @@ withTestEnv f =
       let config = Config { port = 0
                           , persistStore = PersistStore path
                           , carbon = Carbon Nothing
+                          , dataDir = path </> "data"
                           }
       metrics <- newMetrics
-      let environment = Env { .. }
-      f environment
+      withConnection ":memory:" $ \connection -> do
+        let environment = Env { .. }
+        f environment
 
 writeFileStorage :: LByteString -> ReaderT StorageEnv IO (Maybe Hash)
 writeFileStorage lbs =
