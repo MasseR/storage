@@ -63,6 +63,8 @@ handler = API {..}
     postObject bs = do
       tree <- build (hoist liftIO bs)
       for_ tree $ \t -> withTransaction $ runDB $ do
+        -- There doesn't seem to be "on conflict" style clause for sqlite in this version of beam
+        -- Simulate it by checking for existence in a transaction
         let h = extract t
         exists <- runSelectReturningOne $ lookupHash h
         when (null exists) $
