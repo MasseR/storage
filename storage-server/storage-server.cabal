@@ -31,19 +31,22 @@ library
                      , Data.Port
                      , Storage.Environment
                      , Storage.Logger
+                     , Storage.Main
+                     , Storage.Metrics
+                     , Storage.Metrics.Carbon
                      , Storage.Server.Object
                      , Storage.Server.System
                      , Storage.Server.System.Stats
-                     , Storage.Metrics
-                     , Storage.Metrics.Carbon
-                     , Storage.Main
   -- other-extensions:
   build-depends:       base >=4.12 && <4.13
+                     , QuickCheck
                      , aeson
                      , comonad
                      , ekg-carbon
                      , ekg-core
                      , generic-lens
+                     , genvalidity
+                     , genvalidity-text
                      , katip
                      , lens
                      , masse-prelude
@@ -64,9 +67,6 @@ library
                      , wai-middleware-metrics
                      , warp
                      , yaml
-                     , genvalidity
-                     , genvalidity-text
-                     , QuickCheck
   hs-source-dirs:      src
   default-language:    Haskell2010
 
@@ -92,10 +92,10 @@ test-suite test
                      , QuickCheck
                      , aeson
                      , generic-lens
+                     , genvalidity
                      , genvalidity-bytestring
                      , genvalidity-hspec
                      , genvalidity-hspec-aeson
-                     , genvalidity
                      , hspec
                      , hspec-golden-aeson
                      , http-client
