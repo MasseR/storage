@@ -40,11 +40,11 @@ type Reqs r m =
 handler :: forall r m. Reqs r m => API (AsServerT m)
 handler = API {..}
   where
-    post :: Producer ByteString IO () -> m Hash
-    post bs = do
+    postObject :: Producer ByteString IO () -> m Hash
+    postObject bs = do
       tree <- build (hoist liftIO bs)
       maybe (throwIO err500) (pure . extract) tree
-    get :: Hash -> m (Producer ByteString IO ())
-    get h = do
+    getObject :: Hash -> m (Producer ByteString IO ())
+    getObject h = do
       x <- consume h
       maybe (throwIO err404) (\p -> withRunInIO $ \r -> pure (hoist r p)) x

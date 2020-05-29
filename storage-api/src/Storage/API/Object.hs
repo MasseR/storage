@@ -17,8 +17,8 @@ import           Pipes
 import           Data.Merkle.Hash
 
 data API route
-  = API { post :: route :- StreamBody NoFraming OctetStream (Producer ByteString IO ()) :> Post '[JSON] Hash
-        , get :: route :- Capture "hash" Hash :> StreamGet NoFraming OctetStream (Producer ByteString IO ()) }
+  = API { postObject :: route :- StreamBody NoFraming OctetStream (Producer ByteString IO ()) :> Post '[JSON] Hash
+        , getObject :: route :- Capture "hash" Hash :> StreamGet NoFraming OctetStream (Producer ByteString IO ()) }
   deriving stock (Generic)
 
 

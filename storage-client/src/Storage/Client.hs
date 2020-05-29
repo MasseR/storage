@@ -75,8 +75,7 @@ postObject :: Producer ByteString IO () -> ClientM Hash
 -- | Get a raw object from the storage
 getObject :: Hash -> ClientM (Producer ByteString IO ())
 
-Object.API { post = postObject
-           , get = getObject } = fromServant @_ @(AsClientT ClientM) obj
+Object.API {..} = fromServant @_ @(AsClientT ClientM) obj
   where
     API{ index = _
        , system = _
