@@ -49,7 +49,6 @@ import           Data.Generics.Product       (field)
 
 import           System.FilePath             ((</>))
 
-import           Database
 import           Database.Migrate
 import           Database.SQLite.Simple      (withConnection)
 
@@ -98,7 +97,7 @@ readFileStorage h =
 listFileStorage :: ReaderT StorageEnv IO [Hash]
 listFileStorage =
   withClient getObjects $ \case
-    Left e -> pure []
+    Left _e -> pure []
     Right p -> pure p
 
 newtype Model
