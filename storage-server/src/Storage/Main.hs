@@ -50,4 +50,4 @@ defaultMain = do
       server
   where
     limitedBackoff = exponentialBackoff 50 <> limitRetries 5
-    withRetry f = recovering limitedBackoff [\_st -> Handler (const @_ @HttpException (pure True))] (\_st -> f)
+    withRetry f = recovering limitedBackoff [const (Handler (const @_ @HttpException (pure True)))] (const f)
