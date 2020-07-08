@@ -13,7 +13,7 @@ import           Storage.Logger      (LogM (..))
 
 import           Storage.Environment (Env)
 
-import Control.Monad.Catch (MonadMask, MonadCatch, MonadThrow)
+import           Control.Monad.Catch (MonadCatch, MonadMask, MonadThrow)
 
 newtype AppM a = AppM (ReaderT Env IO a)
 
