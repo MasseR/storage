@@ -2,7 +2,6 @@ module Data.Config where
 
 import           Data.Port                  (Port)
 import           MyPrelude
-import           Storage.Metrics.Carbon     (Carbon)
 import           Storage.Persist            (PersistStore)
 
 import           Data.Aeson                 (FromJSON, ToJSON)
@@ -14,7 +13,6 @@ import           Data.GenValidity.Arbitrary
 data Config
   = Config { port         :: !Port
            , persistStore :: !PersistStore
-           , carbon       :: !Carbon
            }
   deriving Arbitrary via (ViaGenValid Config)
 

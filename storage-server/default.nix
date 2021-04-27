@@ -1,26 +1,33 @@
-{ lib, haskellPackages }:
-
-let cleanSourceFilter = name: type: let baseName = baseNameOf (toString name); in ! (
-      # Filter out version control software files/directories
-      (baseName == ".git" || type == "directory" && (baseName == ".svn" || baseName == "CVS" || baseName == ".hg")) ||
-      # Filter out editor backup / swap files.
-      lib.hasSuffix "~" baseName ||
-      builtins.match "^\\.sw[a-z]$" baseName != null ||
-      builtins.match "^\\..*\\.sw[a-z]$" baseName != null ||
-
-      # Filter out generates files.
-      lib.hasSuffix ".o" baseName ||
-      lib.hasSuffix ".so" baseName ||
-      baseName == "tags" ||
-      # Filter out nix files
-      lib.hasSuffix ".nix" baseName ||
-      # Filter out nix-build result symlinks
-      (type == "symlink" && lib.hasPrefix "result" baseName) ||
-      # Filter out dist
-      (lib.hasPrefix "dist" baseName)
-  );
-
-
-in
-
-haskellPackages.callCabal2nix "storage-server" (lib.cleanSourceWith { src = ./.; filter = cleanSourceFilter; }) {}
+{ mkDerivation, aeson, base, comonad, ekg-core, generic-lens
+, genvalidity, genvalidity-bytestring, genvalidity-hspec
+, genvalidity-hspec-aeson, genvalidity-text, hspec
+, hspec-golden-aeson, http-client, katip, lens, masse-prelude
+, merkle, mtl, pipes, pipes-bytestring, QuickCheck, servant
+, servant-client, servant-pipes, servant-server, servant-swagger
+, servant-swagger-ui, stdenv, storage-api, storage-client
+, storage-core, temporary, transformers, unliftio, wai
+, wai-middleware-metrics, warp, yaml
+}:
+mkDerivation {
+  pname = "storage-server";
+  version = "0.1.0.0";
+  src = ./.;
+  isLibrary = true;
+  isExecutable = true;
+  libraryHaskellDepends = [
+    aeson base comonad ekg-core generic-lens genvalidity
+    genvalidity-text katip lens masse-prelude merkle mtl pipes
+    pipes-bytestring QuickCheck servant servant-pipes servant-server
+    servant-swagger servant-swagger-ui storage-api storage-core
+    transformers unliftio wai wai-middleware-metrics warp yaml
+  ];
+  executableHaskellDepends = [ base ];
+  testHaskellDepends = [
+    aeson base generic-lens genvalidity genvalidity-bytestring
+    genvalidity-hspec genvalidity-hspec-aeson hspec hspec-golden-aeson
+    http-client lens masse-prelude merkle mtl pipes pipes-bytestring
+    QuickCheck servant-client servant-server storage-client
+    storage-core temporary transformers warp
+  ];
+  license = stdenv.lib.licenses.mit;
+}

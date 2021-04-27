@@ -13,7 +13,6 @@ import           Data.Config
 import           Data.Port
 
 import           Storage.Metrics        (HasMetrics (..), Metrics)
-import           Storage.Metrics.Carbon (HasCarbon (..))
 import           Storage.Persist        (HasPersistStore (..))
 
 data Env
@@ -38,7 +37,3 @@ instance HasPersistStore Env where
 instance HasMetrics Env where
   getMetrics = view typed
   setMetrics = flip (set typed)
-
-instance HasCarbon Env where
-  getCarbon = view (field @"config" . typed)
-  setCarbon = flip (set (field @"config" . typed))

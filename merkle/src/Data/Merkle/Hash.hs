@@ -18,8 +18,6 @@ import           Data.SafeCopy               (SafeCopy (..), base, contain,
 import           Control.Lens                (Prism', preview, prism', re, view)
 import           Data.Text.Strict.Lens       (utf8)
 
-import           Data.List.NonEmpty          (NonEmpty)
-
 import           Data.Aeson                  (FromJSON (..), ToJSON (..))
 
 import           Web.HttpApiData             (ToHttpApiData(..), FromHttpApiData (..))

@@ -1,26 +1,19 @@
-{ lib, haskellPackages }:
-
-let cleanSourceFilter = name: type: let baseName = baseNameOf (toString name); in ! (
-      # Filter out version control software files/directories
-      (baseName == ".git" || type == "directory" && (baseName == ".svn" || baseName == "CVS" || baseName == ".hg")) ||
-      # Filter out editor backup / swap files.
-      lib.hasSuffix "~" baseName ||
-      builtins.match "^\\.sw[a-z]$" baseName != null ||
-      builtins.match "^\\..*\\.sw[a-z]$" baseName != null ||
-
-      # Filter out generates files.
-      lib.hasSuffix ".o" baseName ||
-      lib.hasSuffix ".so" baseName ||
-      baseName == "tags" ||
-      # Filter out nix files
-      lib.hasSuffix ".nix" baseName ||
-      # Filter out nix-build result symlinks
-      (type == "symlink" && lib.hasPrefix "result" baseName) ||
-      # Filter out dist
-      (lib.hasPrefix "dist" baseName)
-  );
-
-
-in
-
-haskellPackages.callCabal2nix "storage-api" (lib.cleanSourceWith { src = ./.; filter = cleanSourceFilter; }) {}
+{ mkDerivation, aeson, base, ekg-core, genvalidity
+, genvalidity-hspec, genvalidity-hspec-aeson, genvalidity-text
+, hspec, hspec-golden-aeson, masse-prelude, merkle, pipes
+, QuickCheck, servant, servant-pipes, stdenv
+}:
+mkDerivation {
+  pname = "storage-api";
+  version = "0.1.0.0";
+  src = ./.;
+  libraryHaskellDepends = [
+    aeson base ekg-core genvalidity genvalidity-text masse-prelude
+    merkle pipes QuickCheck servant servant-pipes
+  ];
+  testHaskellDepends = [
+    base genvalidity-hspec genvalidity-hspec-aeson hspec
+    hspec-golden-aeson masse-prelude QuickCheck
+  ];
+  license = stdenv.lib.licenses.mit;
+}

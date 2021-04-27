@@ -28,7 +28,6 @@ import           Storage.Client              (StorageEnv (..), getObject,
 import           Storage.Environment
 import           Storage.Logger              (logInfo, withLogger)
 import           Storage.Metrics             (newMetrics)
-import           Storage.Metrics.Carbon      (Carbon (..))
 import           Storage.Persist             (PersistStore (..))
 import           Storage.Server              (app)
 
@@ -60,15 +59,12 @@ withServer f = withTestEnv $ \env ->
 
 -- | Create a test environment
 --
--- In the test environment the port is invalid, carbon is not set and the
--- persist store path is set to a temporary directory
 withTestEnv :: (Env -> IO a) -> IO a
 withTestEnv f =
   withLogger $ \loggingEnv ->
     withSystemTempDirectory "storage-test" $ \path -> do
       let config = Config { port = 0
                           , persistStore = PersistStore path
-                          , carbon = Carbon Nothing
                           }
       metrics <- newMetrics
       let environment = Env { .. }

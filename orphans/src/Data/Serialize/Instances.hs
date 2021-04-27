@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Data.Serialize.Instances where
 
-import           Data.List.NonEmpty (NonEmpty (..), fromList, toList)
+import           Data.List.NonEmpty (fromList, toList)
 
 import           Data.Serialize     (Serialize (..))
 

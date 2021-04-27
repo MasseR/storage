@@ -16,7 +16,7 @@ import           MyPrelude
 
 import           Data.Merkle.Hash
 
-import           Data.List.NonEmpty          (NonEmpty (..), nonEmpty, unfoldr)
+import           Data.List.NonEmpty          (NonEmpty (..), unfoldr)
 
 
 import           Control.Comonad

@@ -9,7 +9,6 @@ import           Storage.Server         (server)
 
 import           Storage.Logger         (logInfo, withLogger)
 import           Storage.Metrics        (newMetrics)
-import           Storage.Metrics.Carbon (startCarbon)
 
 import           Data.Config
 
@@ -28,5 +27,4 @@ defaultMain :: IO ()
 defaultMain = withEnv $ \environment ->
   runAppM environment $ do
     logInfo "Starting up the server .."
-    void startCarbon
     server

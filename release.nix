@@ -1,54 +1,35 @@
-with (builtins.fromJSON (builtins.readFile ./nixpkgs.ghc.json));
-
+{ nixpkgs ? import <nixpkgs> {} }:
 
 let
-  masse-prelude-src = pkgs.fetchFromGitHub {
+  masse-prelude-src = nixpkgs.fetchFromGitHub {
     owner = "MasseR";
     repo = "masse-prelude";
-    rev = "52fdf7cd5b70e399d6279083757b1ea0806aa68a";
-    sha256 = "0pzp97899r2wxsbz5s8mn6h1hyjbq786aq83i4dcmgqv68g8v0ql";
+    rev = "69c2d9ec41e5b91cdf26eafada35f144359de8f9";
+    sha256 = "1f2nrmhi4x6lvlgb96k8gykz30z9z3qf1z7w4ybb3j2ljj2gb9nq";
   };
-  overrides = pkgs: with pkgs.haskell.lib; {
-    haskell = pkgs.haskell // {
-      packages = pkgs.haskell.packages // {
-        ghc865 = pkgs.haskell.packages.ghc865.override {
-          overrides = self: super: with pkgs.haskell.lib; rec {
-            masse-prelude = super.callPackage masse-prelude-src {};
-            merkle = super.callPackage ./merkle {};
-            storage-core = super.callPackage ./storage-core {};
-            storage-server = super.callPackage ./storage-server {};
-            storage-api = super.callPackage ./storage-api {};
-            storage-client = super.callPackage ./storage-client {};
-            orphans = super.callPackage ./orphans {};
-          };
-        };
-      };
-    };
-  };
-  pkgs = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/${rev}.tar.gz";
-    inherit sha256;
-  }) { config.packageOverrides = overrides; config.allowUnfree = true; };
+  hp = nixpkgs.haskellPackages.extend (self: super: rec {
+    masse-prelude = self.callPackage masse-prelude-src {};
+    merkle = self.callPackage ./merkle {};
+    storage-core = self.callPackage ./storage-core {};
+    storage-server = self.callPackage ./storage-server {};
+    storage-api = self.callPackage ./storage-api {};
+    storage-client = self.callPackage ./storage-client {};
+    orphans = self.callPackage ./orphans {};
+  });
 
 in
 
 rec {
-  inherit (pkgs.haskell.packages.ghc865) merkle storage-core storage-server storage-api storage-client;
-  shell = pkgs.buildEnv {
-    name = "shell";
-    paths = [];
-    buildInputs = with pkgs; [
+  inherit (hp) merkle storage-core storage-server storage-api storage-client;
+  shell = hp.shellFor {
+    packages = h: with h; [merkle storage-core storage-server storage-api storage-client orphans];
+    buildInputs = with nixpkgs; [
       entr
       ghcid
-      haskell.packages.ghc865.cabal-install
-      haskell.packages.ghc865.hasktags
+      hp.cabal-install
+      hp.hasktags
       stylish-haskell
       hlint
-      binutils
-      (haskell.packages.ghc865.ghcWithHoogle
-        (_: builtins.concatMap
-          (p: p.buildInputs ++ p.propagatedBuildInputs)
-          [ merkle storage-core storage-server storage-client ]))
     ];
   };
 }
